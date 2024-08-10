@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OPSC7312_BudgetBuddy</string>
+    <string name="todo">Te Doen</string>
+    <string name="login">Aanmeld</string>
+    <string name="email">E-pos</string>
+    <string name="password">Wagwoord</string>
+    <string name="dont_have_an_account">het nie \'n rekening nie</string>
+    <string name="register">Registreer</string>
+    <string name="have_an_account">Het \'n rekening</string>
+</resources>

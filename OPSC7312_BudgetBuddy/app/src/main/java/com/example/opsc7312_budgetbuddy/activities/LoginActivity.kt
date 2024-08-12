@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -34,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
                         if(task.isSuccessful)
                         {
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, HomeActivity::class.java)
+                            val intent = Intent(this, Dashboard::class.java)
                             startActivity(intent)
                             finish()
                         }

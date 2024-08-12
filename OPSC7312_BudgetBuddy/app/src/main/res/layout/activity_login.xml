@@ -26,6 +26,7 @@
             android:layout_height="200dp"
             android:elevation="20dp"
             android:src="@drawable/logo"
+            android:background="@drawable/white_rounded_border"
             android:contentDescription="@string/todo" />
 
         <TextView
@@ -116,7 +117,8 @@
                 android:fontFamily="@font/mplus_rounded"
                 android:layout_marginTop="2dp"
                 android:text="@string/register"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 android:textSize="18sp" />
 
         </LinearLayout>

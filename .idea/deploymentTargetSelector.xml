@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="OPSC7312_BudgetBuddy.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-12T17:41:12.609554100Z">
+        <DropdownSelection timestamp="2024-08-13T22:33:42.986554700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Avish\.android\avd\Pixel_7_API_TiramisuPrivacySandbox.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Avish\.android\avd\Pixel_7_API_30.avd" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -14,4 +14,14 @@
     <string name="account">Account</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome">Welcome</string>
+    <string name="available_budget">Available Budget</string>
+    <string name="budget_zar">Budget (ZAR)</string>
+    <string name="transactions">Transactions</string>
+    <string name="r0_00">R0,00</string>
+    <string name="_142">142</string>
+    <string name="_000">000</string>
+    <string name="set_budget">Set Budget</string>
+    <string name="log_transaction">Log Transaction</string>
+    <string name="budget_breakdown">Budget Breakdown</string>
 </resources>

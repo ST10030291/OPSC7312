@@ -3,13 +3,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_1"
     tools:context=".activities.DashboardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/dashboard"
-        android:textSize="100sp"/>
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/welcomeTextView"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/welcome"
+            android:textColor="@color/blue_10"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="373dp"
+            android:layout_height="159dp"
+            android:layout_below="@+id/welcomeTextView"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/blue5_rounded_border">
+
+            <TextView
+                android:layout_width="239dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="20sp"
+                android:layout_marginTop="4dp"
+                android:text="@string/available_budget"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="61dp"
+                android:text="@string/budget_zar"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="212dp"
+                android:layout_marginTop="61dp"
+                android:text="@string/transactions"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/availableBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="114dp"
+                android:text="@string/r0_00"
+                android:textColor="@color/blue_1"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/totalTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="221dp"
+                android:layout_marginTop="112dp"
+                android:text="@string/_000"
+                android:textColor="@color/blue_1"
+                android:textSize="25sp" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/setBudgetBtn"
+            android:layout_width="126dp"
+            android:layout_height="98dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="247dp"
+            android:background="@drawable/blue5_rounded_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/budget" />
+
+        <ImageView
+            android:id="@+id/logTransactionBtn"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="235dp"
+            android:layout_marginTop="247dp"
+            android:background="@drawable/blue5_rounded_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/transaction" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="195dp"
+            android:layout_marginTop="353dp"
+            android:text="@string/log_transaction"
+            android:textColor="@color/blue_8"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="354dp"
+            android:text="@string/set_budget"
+            android:textColor="@color/blue_8"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/budgetBreakdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="400dp"
+            android:text="@string/budget_breakdown"
+            android:textColor="@color/blue_10"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 </FrameLayout>

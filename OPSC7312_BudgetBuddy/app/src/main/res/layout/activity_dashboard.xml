@@ -33,13 +33,14 @@
         <TextView
             android:layout_width="242dp"
             android:layout_height="70dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="sans-serif"
+            android:paddingTop="10dp"
             android:text="@string/budget_buddy"
+            android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="38sp"
-            android:paddingTop="10dp"
-            android:textAlignment="center"
             android:textStyle="bold" />
     </LinearLayout>
 

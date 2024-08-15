@@ -6,7 +6,7 @@
         android:icon="@drawable/home_icon" />
 
     <item
-        android:id="@+id/controller_icon"
+        android:id="@+id/navigation_transaction"
         android:title="@string/transactions"
         android:icon="@drawable/transaction" />
 

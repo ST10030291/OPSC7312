@@ -24,8 +24,12 @@ class Dashboard : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_dashboard -> {
+                R.id.navigation_home -> {
                     loadFragment(DashboardFragment())
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_transaction -> {
+                    loadFragment(TransactionsFragment())
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_analytics -> {

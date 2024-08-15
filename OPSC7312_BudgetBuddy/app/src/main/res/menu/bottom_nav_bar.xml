@@ -1,16 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/home_icon"
-        android:title="@string/dashboard" />
+        android:id="@+id/navigation_home"
+        android:title="@string/dashboard"
+        android:icon="@drawable/home_icon" />
+
+    <item
+        android:id="@+id/controller_icon"
+        android:title="@string/transactions"
+        android:icon="@drawable/transaction" />
+
+    <!-- The middle item will be invisible, acting as a placeholder for the popup tray -->
+    <item
+        android:id="@+id/navigation_placeholder"
+        android:visible="false"
+        android:title="" />
 
     <item
         android:id="@+id/navigation_analytics"
-        android:icon="@drawable/analytics_icon"
-        android:title="@string/analytics" />
+        android:title="@string/analytics"
+        android:icon="@drawable/analytics_icon" />
 
     <item
         android:id="@+id/navigation_account"
-        android:icon="@drawable/account_icon"
-        android:title="@string/account" />
+        android:title="@string/account"
+        android:icon="@drawable/account_icon"/>
 </menu>

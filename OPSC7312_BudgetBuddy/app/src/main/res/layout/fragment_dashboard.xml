@@ -11,13 +11,51 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/welcomeTextView"
+            android:id="@+id/pageName"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/dashboard"
+            android:textColor="@color/blue_10"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/notification_btn"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="75dp"
+            android:src="@drawable/notification_icon"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <ImageView
+            android:id="@+id/account_btn"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/blue_10"
+            android:src="@drawable/account_icon"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/welcomeTextView"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="80dp"
             android:text="@string/welcome"
             android:textColor="@color/blue_10"
             android:textSize="30sp"
@@ -28,8 +66,8 @@
             android:layout_height="159dp"
             android:layout_below="@+id/welcomeTextView"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="1dp"
             android:background="@drawable/blue5_rounded_border">
 
             <TextView
@@ -94,62 +132,14 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/setBudgetBtn"
-            android:layout_width="126dp"
-            android:layout_height="98dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="247dp"
-            android:background="@drawable/blue5_rounded_border"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/budget" />
-
-        <ImageView
-            android:id="@+id/logTransactionBtn"
-            android:layout_width="120dp"
-            android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="235dp"
-            android:layout_marginTop="247dp"
-            android:background="@drawable/blue5_rounded_border"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/transaction" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="195dp"
-            android:layout_marginTop="353dp"
-            android:text="@string/log_transaction"
-            android:textColor="@color/blue_8"
-            android:textSize="25sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="33dp"
-            android:layout_marginTop="354dp"
-            android:text="@string/set_budget"
-            android:textColor="@color/blue_8"
-            android:textSize="25sp" />
-
         <TextView
             android:id="@+id/budgetBreakdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="400dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="316dp"
             android:text="@string/budget_breakdown"
             android:textColor="@color/blue_10"
             android:textSize="30sp"

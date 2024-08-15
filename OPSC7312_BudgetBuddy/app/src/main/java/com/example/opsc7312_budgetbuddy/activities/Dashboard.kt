@@ -1,10 +1,11 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.databinding.ActivityDashboardBinding
@@ -26,23 +27,50 @@ class Dashboard : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     loadFragment(DashboardFragment())
-                    return@setOnItemSelectedListener true
+                    true
                 }
                 R.id.navigation_transaction -> {
                     loadFragment(TransactionsFragment())
-                    return@setOnItemSelectedListener true
+                    true
                 }
                 R.id.navigation_analytics -> {
                     loadFragment(AnalyticsFragment())
-                    return@setOnItemSelectedListener true
+                    true
                 }
                 R.id.navigation_account -> {
                     loadFragment(AccountFragment())
-                    return@setOnItemSelectedListener true
+                    true
                 }
+                else -> false
             }
-            false
         }
+
+        binding.fabPopupTray.setOnClickListener { view ->
+            showPopupMenu(view)
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        // Create a PopupMenu
+        val popup = PopupMenu(this, view)
+        // Inflate the popup menu
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.popupmenu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.setBudget -> {
+                    loadFragment(SetBudgetFragment())
+                    true
+                }
+                R.id.logTransaction -> {
+                    loadFragment(LogTransactionFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
 
     private fun loadFragment(fragment: Fragment) {

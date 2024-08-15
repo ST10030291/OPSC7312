@@ -38,5 +38,4 @@
         app:itemIconTint="@drawable/bottom_nav_item_color"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_nav_bar" />
-
 </RelativeLayout>

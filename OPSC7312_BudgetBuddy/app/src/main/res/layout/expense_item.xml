@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="379dp"
+    android:layout_height="89dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="379dp"
+        android:layout_height="89dp">
+
+
+        <ImageView
+            android:id="@+id/displayCategoryImage"
+            android:layout_width="62dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/displayTransactionName"
+            android:layout_width="166dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/displayCategoryImage"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Food" />
+
+        <TextView
+            android:id="@+id/displayCost"
+            android:layout_width="83dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="28dp"
+            android:text="R 4000.00"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/displayTransactionName"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

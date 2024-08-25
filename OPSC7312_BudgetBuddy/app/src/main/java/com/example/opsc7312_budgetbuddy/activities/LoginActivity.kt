@@ -20,6 +20,15 @@ class LoginActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
+        // Check if the user is already logged in
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            // User is already logged in
+            val intent = Intent(this, Dashboard::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         binding.LoginBtn.setOnClickListener{
             val email =  binding.emailInput.text.toString()
             val password =  binding.passwordInput.text.toString()

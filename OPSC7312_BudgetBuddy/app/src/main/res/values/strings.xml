@@ -24,4 +24,6 @@
     <string name="set_budget">Set Budget</string>
     <string name="log_transaction">Log Transaction</string>
     <string name="budget_breakdown">Budget Breakdown</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="default_web_client_id">548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com</string>
 </resources>

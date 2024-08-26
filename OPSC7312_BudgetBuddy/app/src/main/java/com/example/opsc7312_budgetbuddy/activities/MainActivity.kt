@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                 if(counter == 100){
                     t.cancel()
 
-                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                    val intent = Intent(this@MainActivity, Dashboard::class.java)
                     startActivity(intent)
                 }
             }

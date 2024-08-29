@@ -2,41 +2,35 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="379dp"
-    android:layout_height="89dp"
+    android:layout_width="390dp"
+    android:layout_height="116dp"
     android:layout_marginStart="20dp"
     android:layout_marginBottom="5dp"
     app:cardCornerRadius="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="379dp"
-        android:layout_height="89dp">
+        android:layout_width="390dp"
+        android:layout_height="116dp">
 
 
-        <TextView
+        <Spinner
             android:id="@+id/categoryExpense"
-            android:layout_width="260dp"
-            android:layout_height="42dp"
+            android:layout_width="231dp"
+            android:layout_height="44dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="KFC streetwise 2"
-            android:textAlignment="textStart"
-            android:textColor="@color/black"
-            android:textSize="29sp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/input_box"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/displayCost"
-            android:layout_width="83dp"
-            android:layout_height="23dp"
-            android:layout_marginTop="33dp"
+        <EditText
+            android:id="@+id/enterAmount"
+            android:layout_width="81dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="44dp"
             android:layout_marginEnd="16dp"
-            android:text="-R 4000.00"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="15sp"
+            android:background="@drawable/input_box"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,13 +38,14 @@
             android:id="@+id/displayCategory"
             android:layout_width="69dp"
             android:layout_height="23dp"
-            android:layout_marginStart="18dp"
-            android:text="Food"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
+            android:text="Category:"
             android:textAlignment="viewStart"
             android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categoryExpense" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

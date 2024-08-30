@@ -33,7 +33,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/createButton"
+                android:id="@+id/createBudgetButton"
 
                 android:layout_width="121dp"
                 android:layout_height="59dp"
@@ -72,7 +72,7 @@
                 android:background="@drawable/input_box"
                 android:hint="       Name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/createButton" />
+                app:layout_constraintTop_toBottomOf="@+id/createBudgetButton" />
 
             <EditText
                 android:id="@+id/amountInput"
@@ -88,14 +88,25 @@
 
             <Spinner
                 android:id="@+id/categoryInput"
-
                 android:layout_width="351dp"
                 android:layout_height="51dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="29dp"
+                android:layout_marginBottom="41dp"
                 android:background="@drawable/input_box"
+                app:layout_constraintBottom_toTopOf="@+id/imageView3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/amountInput" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="184dp"
+                android:layout_marginTop="28dp"
+                android:src="@drawable/white_line"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categoryInput" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

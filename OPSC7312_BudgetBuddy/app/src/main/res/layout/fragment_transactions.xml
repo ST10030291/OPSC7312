@@ -22,7 +22,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/createButton"
+            android:id="@+id/createBudgetButton"
             android:layout_width="121dp"
             android:layout_height="59dp"
             android:layout_marginTop="57dp"
@@ -58,7 +58,7 @@
             android:background="@drawable/input_box"
             android:hint="       Name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createButton" />
+            app:layout_constraintTop_toBottomOf="@+id/createBudgetButton" />
 
         <EditText
             android:id="@+id/amountInput"

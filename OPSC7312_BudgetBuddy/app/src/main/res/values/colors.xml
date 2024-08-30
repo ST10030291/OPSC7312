@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <color name="blue_1">#A9D6E5</color>
-        <color name="blue_2">#89C2D9</color>
-        <color name="blue_3">#61A5C2</color>
-        <color name="blue_4">#468FAF</color>
-        <color name="blue_5">#2C7DA0</color>
-        <color name="blue_6">#2A6F97</color>
-        <color name="blue_7">#014F86</color>
-        <color name="blue_8">#01497C</color>
-        <color name="blue_9">#013A63</color>
-        <color name="blue_10">#012A4A</color>
-        <color name="black">#000000</color>
-        <color name="white">#FFFFFF</color>
-        <color name="red">#FF0000</color>
-        <color name="gray">#808080</color>
-        <color name="blue">#459DE4</color>
-
+    <color name="blue_1">#A9D6E5</color>
+    <color name="blue_2">#89C2D9</color>
+    <color name="blue_3">#61A5C2</color>
+    <color name="blue_4">#468FAF</color>
+    <color name="blue_5">#2C7DA0</color>
+    <color name="blue_6">#2A6F97</color>
+    <color name="blue_7">#014F86</color>
+    <color name="blue_8">#01497C</color>
+    <color name="blue_9">#013A63</color>
+    <color name="blue_10">#012A4A</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="gray">#808080</color>
+    <color name="blue">#459DE4</color>
+    <color name="transparent">#00FFFFFF</color>
 
 
     <style name="DialogAnimation">

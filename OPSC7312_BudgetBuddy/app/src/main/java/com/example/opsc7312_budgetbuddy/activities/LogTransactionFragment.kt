@@ -14,9 +14,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.opsc7312_budgetbuddy.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,23 +29,18 @@ private const val ARG_PARAM2 = "param2"
  */
 class LogTransactionFragment: Fragment() {
     private lateinit var dbHelper: DatabaseHelper
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var firebaseReference: FirebaseDatabase
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_log_transaction, container, false)
-
         val dbHelper = DatabaseHelper(requireContext())
         val transactionName: EditText = view.findViewById(R.id.transactionNameInput)
         val transactionAmount: EditText = view.findViewById(R.id.amountInput)
         val categorySpinner: Spinner = view.findViewById(R.id.categoryInput)
 
-        val createButton: Button = view.findViewById(R.id.createBudgetButton)
+        val createButton: Button = view.findViewById(R.id.createTransactionButton)
 
         createButton.setOnClickListener {
             val name = transactionName.text.toString()
@@ -58,23 +52,24 @@ class LogTransactionFragment: Fragment() {
         }
         return view
     }
-    @RequiresApi(Build.VERSION_CODES.O)
+
     fun insertTransaction(name: String, amount: Double, category: String){
         val database = dbHelper.writableDatabase
-        val currentMonth = LocalDate.now().month.name
+        val calender = Calendar.getInstance()
+        val month = calender.get(Calendar.MONTH).toString()
         val firebaseAuth = FirebaseAuth.getInstance().currentUser
         val userID = firebaseAuth?.uid.toString()
         val transaction = ContentValues().apply {
             put(DatabaseHelper.TRANSACTION_NAME, name)
             put(DatabaseHelper.TRANSACTION_AMOUNT, amount)
             put(DatabaseHelper.TRANSACTION_CATEGORY, category)
-            put(DatabaseHelper.TRANSACTION_MONTH, currentMonth)
+            put(DatabaseHelper.TRANSACTION_MONTH, month)
             put(DatabaseHelper.USER_ID, userID)
         }
 
         // Insert the data into the Users table
         val newRowId = database.insert(DatabaseHelper.TRANSACTION_TABLE, null, transaction)
-
+        Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show()
         if (newRowId != -1L) {
             Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show()
         } else {

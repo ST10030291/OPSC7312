@@ -17,7 +17,7 @@ class TransactionsFragment: BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+   //something else
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

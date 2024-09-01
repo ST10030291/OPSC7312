@@ -33,7 +33,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/createBudgetButton"
+                android:id="@+id/createTransactionButton"
 
                 android:layout_width="121dp"
                 android:layout_height="59dp"
@@ -73,7 +73,7 @@
                 android:background="@drawable/input_box"
                 android:hint="       Total Budget"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/createBudgetButton" />
+                app:layout_constraintTop_toBottomOf="@+id/createTransactionButton" />
 
             <ScrollView
                 android:id="@+id/scrollView2"

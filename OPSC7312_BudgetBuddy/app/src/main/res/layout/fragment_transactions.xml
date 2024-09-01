@@ -4,81 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_1"
     tools:context=".activities.TransactionsFragment">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="384dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/horizontal_line"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/createBudgetButton"
-            android:layout_width="121dp"
-            android:layout_height="59dp"
-            android:layout_marginTop="57dp"
-            android:layout_marginEnd="1dp"
-            android:backgroundTint="@color/white"
-            android:text="Create"
-            android:textAlignment="viewStart"
-            android:textColor="@color/blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:paddingTop="30dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/pageName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="64dp"
-            android:text="Add Transaction"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/transactions"
+            android:textColor="@color/blue_10"
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/transactionNameInput"
-            android:layout_width="351dp"
-            android:layout_height="51dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="37dp"
-            android:background="@drawable/input_box"
-            android:hint="       Name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/createBudgetButton" />
+        <ImageView
+            android:id="@+id/notification_btn"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="75dp"
+            android:src="@drawable/notification_icon"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <EditText
-            android:id="@+id/amountInput"
-            android:layout_width="351dp"
-            android:layout_height="51dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="47dp"
-            android:background="@drawable/input_box"
-            android:hint="       Amount"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transactionNameInput" />
+        <ImageView
+            android:id="@+id/account_btn"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="19dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/blue_10"
+            android:src="@drawable/account_icon"
+            android:clickable="true"
+            android:focusable="true"/>
 
-        <Spinner
-            android:id="@+id/categoryInput"
-            android:layout_width="351dp"
-            android:layout_height="51dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="38dp"
-            android:background="@drawable/input_box"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountInput" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </FrameLayout>

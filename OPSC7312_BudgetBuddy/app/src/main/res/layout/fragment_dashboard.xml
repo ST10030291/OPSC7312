@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/pageName"
@@ -71,12 +72,13 @@
             android:background="@drawable/blue5_rounded_border">
 
             <TextView
-                android:layout_width="239dp"
+                android:layout_width="338dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="20sp"
                 android:layout_marginTop="4dp"
+                android:textAlignment="center"
                 android:text="@string/available_budget"
                 android:textColor="@color/white"
                 android:textSize="30sp"

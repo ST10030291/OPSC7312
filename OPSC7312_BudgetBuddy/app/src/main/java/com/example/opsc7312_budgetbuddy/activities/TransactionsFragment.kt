@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.example.opsc7312_budgetbuddy.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -13,12 +14,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class TransactionsFragment: BottomSheetDialogFragment() {
+class TransactionsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<ImageView>(R.id.notification_btn)?.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NotificationsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

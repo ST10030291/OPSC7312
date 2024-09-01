@@ -8,4 +8,18 @@
     <string name="dont_have_an_account">het nie \'n rekening nie</string>
     <string name="register">Registreer</string>
     <string name="have_an_account">Het \'n rekening</string>
+    <string name="home_page">Tuis Blad</string>
+    <string name="account">Rekening</string>
+    <string name="welcome">Welkom</string>
+    <string name="available_budget">Beskikbare begroting</string>
+    <string name="budget_zar">Begroting (ZAR)</string>
+    <string name="transactions">Transaksies</string>
+    <string name="set_budget">Begroting Bepaal</string>
+    <string name="log_transaction">Log Tansaksie</string>
+    <string name="budget_breakdown">Begroting uiteensetting</string>
+    <string name="sign_in_with_google">Meld aan met Google</string>
+    <string name="notifications">Kennisgewings</string>
+    <string name="total_budgets_made">Totale begrotings gemaak:</string>
+    <string name="change_language_to_afrikaans">Change Language to English</string>
+    <string name="budget_history">Begroting Geskiedenis</string>
 </resources>

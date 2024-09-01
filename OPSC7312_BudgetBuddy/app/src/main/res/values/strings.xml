@@ -8,9 +8,9 @@
     <string name="register">Register</string>
     <string name="have_an_account">Have an account?</string>
     <string name="home_page">Home Page</string>
-    <string name="budget_buddy">Budget Buddy</string>
-    <string name="dashboard">Dashboard</string>
-    <string name="analytics">Analytics</string>
+    <string name="budget_buddy" translatable="false">Budget Buddy</string>
+    <string name="dashboard" translatable="false">Dashboard</string>
+    <string name="analytics" translatable="false">Analytics</string>
     <string name="account">Account</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
@@ -25,5 +25,10 @@
     <string name="log_transaction">Log Transaction</string>
     <string name="budget_breakdown">Budget Breakdown</string>
     <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="default_web_client_id">548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com</string>
+    <string name="notifications">Notifications</string>
+    <string name="total_budgets_made">Total Budgets made:</string>
+    <string name="total_budgeted_with_budget_buddy" translatable="false">Total budgeted with Budget Buddy:</string>
+    <string name="change_language_to_afrikaans">Verander Taal na Afrikaans</string>
+    <string name="budget_history">Budget History</string>
 </resources>

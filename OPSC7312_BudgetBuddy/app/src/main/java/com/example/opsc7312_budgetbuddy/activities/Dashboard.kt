@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.databinding.ActivityDashboardBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class Dashboard : AppCompatActivity() {

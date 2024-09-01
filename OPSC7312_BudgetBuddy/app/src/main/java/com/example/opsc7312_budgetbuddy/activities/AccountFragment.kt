@@ -1,5 +1,6 @@
 package com.example.opsc7312_budgetbuddy.activities
 
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,8 +14,27 @@ import java.util.Locale
 
 class AccountFragment : Fragment() {
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREFS_NAME = "UserPrefs"
+    private val LANGUAGE_KEY = "language_key"
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_account, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Initialize SharedPreferences
+        sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0)
+
+        // Load saved language preference
+        val savedLanguage = sharedPreferences.getString(LANGUAGE_KEY, "en")
+        val languageSwitch = view.findViewById<SwitchCompat>(R.id.languageSwitch)
+        languageSwitch.isChecked = savedLanguage == "af"
 
         // notification button click listener
         view.findViewById<ImageView>(R.id.notification_btn)?.setOnClickListener {
@@ -25,13 +45,11 @@ class AccountFragment : Fragment() {
         }
 
         // language switch
-        val languageSwitch = view.findViewById<SwitchCompat>(R.id.languageSwitch)
         languageSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                setLocale("af") // Switch to Afrikaans
-            } else {
-                setLocale("en") // Switch to English
-            }
+            val languageCode = if (isChecked) "af" else "en"
+            setLocale(languageCode)
+            saveLanguagePreference(languageCode)
+            restartFragment()
         }
     }
 
@@ -41,15 +59,18 @@ class AccountFragment : Fragment() {
         val config = Configuration()
         config.setLocale(locale)
         requireActivity().resources.updateConfiguration(config, requireActivity().resources.displayMetrics)
-
-        requireActivity().recreate()
-
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_account, container, false)
+    private fun saveLanguagePreference(languageCode: String) {
+        with(sharedPreferences.edit()) {
+            putString(LANGUAGE_KEY, languageCode)
+            apply()
+        }
+    }
+
+    private fun restartFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, AccountFragment())
+            .commit()
     }
 }

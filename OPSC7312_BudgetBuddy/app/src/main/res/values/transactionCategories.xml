@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="transactionCategoryArray">
+        <item>Food</item>
+        <item>Transportation</item>
+        <item>Restaurants</item>
+        <item>Entertainment</item>
+        <item>Charity</item>
+
+
+    </string-array>
+</resources>

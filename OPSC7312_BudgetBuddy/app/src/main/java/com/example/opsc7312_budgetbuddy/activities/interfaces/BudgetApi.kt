@@ -7,6 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
+//Actions for API POST AND GET for budgets
 interface BudgetApi {
     @POST("budgets")
     fun addBudget(@Body budget: BudgetModel): Call<Void>

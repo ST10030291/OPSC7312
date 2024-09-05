@@ -14,16 +14,19 @@ data class TransactionModel(
     val categoryName: String= ""
 )
 
+//The TransactionCRUD class is responsible for CRUD operations for transactions
 class TransactionCRUD{
 
     public fun saveTransaction(transactionModel: TransactionModel) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/api/")
+            .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val api = retrofit.create(TransactionApi::class.java)
 
+        //This will check if the transaction has been added to firestore
+        // and will return an appropriate message
         api.addTransaction(transactionModel).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {

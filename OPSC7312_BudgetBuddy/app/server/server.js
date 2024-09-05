@@ -1,30 +1,32 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
+const path = require('path');
 
-// Initialize Firebase Admin SDK
-var serviceAccount = require("./config/opsc7312-budgetbuddy-firebase-adminsdk-pk4i1-41ef493535.json");
-
+//environment variables from vercel will be initialised here
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL
+  })
 });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+const budgetRoutes = require('./routes/budget');
+const transactionRoutes = require('./routes/transaction');
+
+app.use('/api/budgets', budgetRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+//doesnt work yet
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const budgetRoutes = require('./routes/budget');
-app.use('/api', budgetRoutes);
 
-const transactionRoutes = require('./routes/transaction');
-app.use('/api', transactionRoutes);
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
-});
-
+module.exports = app;

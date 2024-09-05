@@ -19,15 +19,18 @@ data class Category(
     val amount: Double = 0.0
 )
 
+//The budgetCRUD class is responsible for CRUD operations for budgets
 class budgetCRUD{
     fun saveBudget(budgetModel: BudgetModel) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:3000/api/")
+            .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val api = retrofit.create(BudgetApi::class.java)
 
+        //This will check if the budget has been added to firestore
+        // and will return an appropriate message
         api.addBudget(budgetModel).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {

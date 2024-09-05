@@ -33,7 +33,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/createTransactionButton"
+                android:id="@+id/createBudgetButton"
 
                 android:layout_width="121dp"
                 android:layout_height="59dp"
@@ -64,14 +64,15 @@
 
 
             <EditText
-                android:id="@+id/budgetInput"
+                android:id="@+id/totalBudgetInput"
 
                 android:layout_width="351dp"
                 android:layout_height="51dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="18dp"
                 android:background="@drawable/input_box"
-                android:hint="       Total Budget"
+                android:paddingStart="15dp"
+                android:hint="Total Budget"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/createTransactionButton" />
 
@@ -81,7 +82,7 @@
                 android:layout_height="228dp"
                 android:layout_marginTop="31dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/budgetInput">
+                app:layout_constraintTop_toBottomOf="@+id/totalBudgetInput">
 
 
                 <LinearLayout

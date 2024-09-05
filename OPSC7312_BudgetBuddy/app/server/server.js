@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 
 // Initialize Firebase Admin SDK
-const serviceAccount = require('./config/opsc7312-budgetbuddy-firebase-adminsdk-pk4i1-f281034b3d.json');
+var serviceAccount = require("./config/opsc7312-budgetbuddy-firebase-adminsdk-pk4i1-41ef493535.json");
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccount)
 });
 
 const app = express();

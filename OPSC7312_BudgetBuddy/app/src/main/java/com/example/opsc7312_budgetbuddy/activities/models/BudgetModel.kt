@@ -15,8 +15,8 @@ data class BudgetModel(
 )
 
 data class Category(
-    val categoryName: String = "",
-    val amount: Double = 0.0
+    var categoryName: String = "",
+    var amount: Double = 0.0
 )
 
 //The budgetCRUD class is responsible for CRUD operations for budgets

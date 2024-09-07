@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="OPSC7312_BudgetBuddy.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-08-30T10:11:22.723298Z">
+        <DropdownSelection timestamp="2024-09-07T12:00:03.970889400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Ditesh\.android\avd\Pixel_7_API_30.avd" />

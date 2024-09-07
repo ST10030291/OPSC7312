@@ -3,8 +3,8 @@ package com.example.opsc7312_budgetbuddy.activities
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.icu.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
@@ -15,25 +15,25 @@ import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
-import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.Category
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.example.opsc7312_budgetbuddy.databinding.ActivityDashboardBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class Dashboard : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var transactionCRUD: TransactionCRUD
     private lateinit var budgetCRUD: budgetCRUD
+    private var expenseList: MutableList<Category> = mutableListOf()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var addExpenseAdapter: AddExpenseAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +130,24 @@ class Dashboard : AppCompatActivity() {
         val totalBudgetInput = dialog.findViewById<EditText>(R.id.totalBudgetInput)
         val saveButton = dialog.findViewById<Button>(R.id.createBudgetButton)
         val cancelButton = dialog.findViewById<ImageView>(R.id.cancelButton)
+        val month = Calendar.MONTH.toString()
+        val addExpense = dialog.findViewById<Button>(R.id.addExpenseButton)
+
+        var recyclerView = dialog.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+        addExpenseAdapter = AddExpenseAdapter(expenseList)
+        recyclerView.adapter = addExpenseAdapter
+
+        addExpense.setOnClickListener {
+            expenseList.add(Category())
+            addExpenseAdapter.notifyItemInserted(expenseList.size - 1)
+        }
+
+
+
+
 
         //TODO Kaushil
         //val month = getmonth

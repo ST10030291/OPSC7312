@@ -2,35 +2,39 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="390dp"
-    android:layout_height="116dp"
+    android:layout_width="350dp"
+    android:layout_height="110dp"
     android:layout_marginStart="20dp"
     android:layout_marginBottom="5dp"
     app:cardCornerRadius="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="390dp"
-        android:layout_height="116dp">
+        android:layout_width="350dp"
+        android:layout_height="110dp">
 
 
         <Spinner
             android:id="@+id/categoryExpense"
-            android:layout_width="231dp"
-            android:layout_height="44dp"
+            android:layout_width="215dp"
+            android:layout_height="48dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="44dp"
             android:background="@drawable/input_box"
+            android:entries="@array/expenseCategoryArray"
+            android:paddingStart="20dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/enterAmount"
-            android:layout_width="81dp"
-            android:layout_height="44dp"
+            android:layout_width="90dp"
+            android:layout_height="48dp"
             android:layout_marginTop="44dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/input_box"
+            android:hint="R 00.00"
+            android:paddingStart="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +42,7 @@
             android:id="@+id/displayCategory"
             android:layout_width="69dp"
             android:layout_height="23dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:text="Category:"
             android:textAlignment="viewStart"

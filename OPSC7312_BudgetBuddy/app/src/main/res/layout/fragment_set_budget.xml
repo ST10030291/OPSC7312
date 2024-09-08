@@ -32,12 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <Button
-                android:id="@+id/createTransactionButton"
+                android:id="@+id/createBudgetButton"
 
                 android:layout_width="121dp"
                 android:layout_height="59dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="@color/white"
                 android:text="Create"
@@ -53,8 +54,8 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
                 android:text="Add Budget"
                 android:textColor="@color/black"
                 android:textSize="30sp"
@@ -62,26 +63,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <EditText
-                android:id="@+id/budgetInput"
+                android:id="@+id/totalBudgetInput"
 
                 android:layout_width="351dp"
                 android:layout_height="51dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/input_box"
-                android:hint="       Total Budget"
+                android:hint="Total Budget"
+                android:paddingStart="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/createTransactionButton" />
+                app:layout_constraintTop_toBottomOf="@+id/createBudgetButton" />
 
             <ScrollView
                 android:id="@+id/scrollView2"
                 android:layout_width="392dp"
                 android:layout_height="228dp"
-                android:layout_marginTop="31dp"
+                android:layout_marginTop="17dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/budgetInput">
+                app:layout_constraintTop_toBottomOf="@+id/addExpenseButton">
 
 
                 <LinearLayout
@@ -93,8 +94,10 @@
                     >
 
                     <androidx.recyclerview.widget.RecyclerView
+
+                        android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="233dp" />
                 </LinearLayout>
             </ScrollView>
 
@@ -110,13 +113,13 @@
 
             <Button
                 android:id="@+id/addExpenseButton"
-                android:layout_width="34dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="208dp"
-                android:layout_marginTop="16dp"
-                android:text="Add"
+                android:layout_width="139dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="236dp"
+                android:layout_marginTop="15dp"
+                android:text="Add Expense"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/totalBudgetInput" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,7 +67,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="18dp"
                 android:background="@drawable/input_box"
-                android:hint="       Name"
+                android:hint="Name"
+                android:paddingStart="28dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/createTransactionButton" />
 
@@ -79,7 +80,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/input_box"
-                android:hint="       Amount"
+                android:hint="Amount"
+                android:paddingStart="28dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/transactionNameInput" />
 
@@ -90,8 +92,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="29dp"
                 android:layout_marginBottom="41dp"
-                android:entries="@array/transactionCategoryArray"
                 android:background="@drawable/input_box"
+                android:entries="@array/transactionCategoryArray"
+                android:paddingStart="28dp"
                 app:layout_constraintBottom_toTopOf="@+id/imageView3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/amountInput" />

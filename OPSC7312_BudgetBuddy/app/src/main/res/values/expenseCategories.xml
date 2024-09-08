@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="expenseCategoryArray">
+        <item>Rent</item>
+        <item>Mortgage</item>
+        <item>Investments</item>
+        <item>Transportation</item>
+        <item>Food</item>
+        <item>Utilities</item>
+        <item>Insurance</item>
+        <item>Education</item>
+        <item>Car Payments</item>
+        <item>Wants</item>
+    </string-array>
+</resources>

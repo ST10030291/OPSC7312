@@ -31,4 +31,9 @@
     <string name="total_budgeted_with_budget_buddy" translatable="false">Total budgeted with Budget Buddy:</string>
     <string name="change_language_to_afrikaans">Verander Taal na Afrikaans</string>
     <string name="budget_history">Budget History</string>
+    <string name="kaushildajee_gmail_com" translatable="false">Kaushildajee@gmail.com</string>
+    <string name="kaushil_dajee" translatable="false">Kaushil Dajee</string>
+    <string name="_124_545_00" translatable="false">124 545, 00</string>
+    <string name="food">Food</string>
+    <string name="recent_transactions">Recent Transactions</string>
 </resources>

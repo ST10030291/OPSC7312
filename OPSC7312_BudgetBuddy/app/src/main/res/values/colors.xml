@@ -22,4 +22,10 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
+
+    <style name="RoundedSquare">
+        <item name="cornerSize">50%</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="color">@color/white</item>
+    </style>
 </resources>

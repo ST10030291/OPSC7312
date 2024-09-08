@@ -69,9 +69,9 @@ class LogTransactionFragment: Fragment() {
 
         // Insert the data into the Users table
         val newRowId = database.insert(DatabaseHelper.TRANSACTION_TABLE, null, transaction)
-        Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "TransactionModel added successfully", Toast.LENGTH_SHORT).show()
         if (newRowId != -1L) {
-            Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "TransactionModel added successfully", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(requireContext(), "Error adding transaction", Toast.LENGTH_SHORT).show()
         }

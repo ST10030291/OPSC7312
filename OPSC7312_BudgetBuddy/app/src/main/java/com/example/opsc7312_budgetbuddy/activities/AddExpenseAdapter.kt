@@ -1,5 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +38,14 @@ class AddExpenseAdapter(private val expenseList: MutableList<Category>) :
 
 
 
+
+        if (expense.amount > 0) {
+            holder.enterAmount.setText(expense.amount.toString())
+        } else {
+            holder.enterAmount.text.clear()
+        }
+
+
         holder.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 expense.categoryName = parent?.getItemAtPosition(pos).toString()
@@ -46,15 +56,26 @@ class AddExpenseAdapter(private val expenseList: MutableList<Category>) :
             }
         }
 
-        val amountText = holder.enterAmount
-        val amountString = amountText.toString()
-        val amountEntered = amountString.toDouble()
-        expense.amount = amountEntered
+        holder.enterAmount.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(amount: Editable?) {
+                if (!amount.isNullOrBlank()) {
+                    expense.amount = amount.toString().toDouble()
+                }
+            }
+
+            override fun beforeTextChanged(amount: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(amount: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     override fun getItemCount(): Int = expenseList.size
 
     private fun getCategoryIndex(category: String): Int {
+
+
+
+
         return 0
     }
 }
@@ -62,14 +83,15 @@ class AddExpenseAdapter(private val expenseList: MutableList<Category>) :
 /*
 * class CategoryAdapter(private val categoryList: List<Category>) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
-    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //declare all variables here
-        val categoryName: Button = itemView.findViewById(R.id.CategoryBtn)
+    class AddExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val categorySpinner: Spinner = itemView.findViewById(R.id.categoryExpense)
+        val enterAmount: EditText = itemView.findViewById(R.id.enterAmount)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_item_layout, parent, false)
-        return CategoryViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddExpenseViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.add_expense_item, parent, false)
+        return AddExpenseViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {

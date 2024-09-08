@@ -141,7 +141,8 @@ class Dashboard : AppCompatActivity() {
         recyclerView.adapter = addExpenseAdapter
 
         addExpense.setOnClickListener {
-            expenseList.add(Category())
+            val newExpense = Category()
+            expenseList.add(newExpense)
             addExpenseAdapter.notifyItemInserted(expenseList.size - 1)
         }
 
@@ -153,16 +154,16 @@ class Dashboard : AppCompatActivity() {
         //val month = getmonth
         //val category = recyclercategory
 
-        val categoryList = listOf(
+        /*val categoryList = listOf(
             Category(categoryName = "Groceries", amount = 500.0),
             Category(categoryName = "Rent", amount = 1200.0),
             Category(categoryName = "Entertainment", amount = 300.0)
-        )
+        )*/
 
         saveButton.setOnClickListener {
             val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
 
-            val budgetModel = BudgetModel("",totalBudget, categoryList)
+            val budgetModel = BudgetModel(month,totalBudget, expenseList)
 
             budgetCRUD.saveBudget(budgetModel)
 

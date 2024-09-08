@@ -24,6 +24,7 @@ import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.example.opsc7312_budgetbuddy.databinding.ActivityDashboardBinding
+import java.text.SimpleDateFormat
 
 class Dashboard : AppCompatActivity() {
 
@@ -130,7 +131,10 @@ class Dashboard : AppCompatActivity() {
         val totalBudgetInput = dialog.findViewById<EditText>(R.id.totalBudgetInput)
         val saveButton = dialog.findViewById<Button>(R.id.createBudgetButton)
         val cancelButton = dialog.findViewById<ImageView>(R.id.cancelButton)
-        val month = Calendar.MONTH.toString()
+
+        val cal = Calendar.getInstance()
+        val month_date = SimpleDateFormat("MMMM")
+        val month = month_date.format(cal.time)
         val addExpense = dialog.findViewById<Button>(R.id.addExpenseButton)
 
         var recyclerView = dialog.findViewById<RecyclerView>(R.id.recyclerView)

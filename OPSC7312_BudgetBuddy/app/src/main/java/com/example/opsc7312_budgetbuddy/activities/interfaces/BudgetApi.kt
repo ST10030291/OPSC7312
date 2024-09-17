@@ -1,6 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities.interfaces
 
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
+import com.example.opsc7312_budgetbuddy.activities.models.TotalBudgetResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,8 +13,8 @@ interface BudgetApi {
     @POST("budgets")
     fun addBudget(@Body budget: BudgetModel): Call<Void>
 
-    @GET("budgets")
-    fun getAllBudgets(): Call<List<BudgetModel>>
+    @GET("users/{userId}/totalBudget")
+    fun getTotalBudget(@Path("userId") userId: String): Call<TotalBudgetResponse>
 
     @GET("budgets/{id}")
     fun getBudgetById(@Path("id") id: String): Call<BudgetModel>

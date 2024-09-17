@@ -11,28 +11,31 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
+import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
+import com.example.opsc7312_budgetbuddy.activities.models.TotalBudgetResponse
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
 import com.google.firebase.auth.FirebaseAuth
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
+import retrofit2.Call
 
 class DashboardFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var BudgetItems: MutableList<BudgetItem>
     private lateinit var BudgetAdapter: BudgetAdapter
-    private lateinit var db: FirebaseFirestore
-
     private lateinit var totalBudgetTextView: TextView
-    private var totalBudget: Double = 0.0
-
+    private lateinit var retrofit: Retrofit
+    private lateinit var budgetApiService: BudgetApi
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,61 +47,54 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize Retrofit
+        retrofit = Retrofit.Builder()
+            .baseUrl("https://budgetapp-amber.vercel.app/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
+
+        budgetApiService = retrofit.create(BudgetApi::class.java)
+
         // Get the current user's email and display the first part as the name
         val user = FirebaseAuth.getInstance().currentUser
         val userEmail = user?.email
         val userName = userEmail?.substringBefore("@") ?: "User"
         view.findViewById<TextView>(R.id.welcomeTextView).text = "Welcome, $userName"
 
-        totalBudgetTextView = view.findViewById(R.id.availableBudget)
-
-
-        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView) // Updated ID
+        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
 
         BudgetItems = mutableListOf()
-
         BudgetAdapter = BudgetAdapter(BudgetItems)
-
         recyclerView.adapter = BudgetAdapter
 
-        EventChangeListener()
+        totalBudgetTextView = view.findViewById(R.id.availableBudget)
+
+        fetchTotalBudget()
     }
 
-    private fun EventChangeListener() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("categories").addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error != null) {
-                    Log.e("Firestore error", error.message.toString())
-                    return
-                }
+    private fun fetchTotalBudget() {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
 
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        val budgetItem = dc.document.toObject(BudgetItem::class.java)
-                        BudgetItems.add(budgetItem)
-                    }
+        budgetApiService.getTotalBudget(userId).enqueue(object : retrofit2.Callback<TotalBudgetResponse> {
+            override fun onResponse(
+                call: Call<TotalBudgetResponse>,
+                response: retrofit2.Response<TotalBudgetResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val totalBudget = response.body()?.totalBudget ?: 0.0
+                    totalBudgetTextView.text = "Total Budget: $${totalBudget}"
+                } else {
+                    Log.e("API Error", "Error fetching total budget")
                 }
-                BudgetAdapter.notifyDataSetChanged()
             }
-        })
 
-        db.collection("totalBudget").addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                if (error != null) {
-                    Log.e("Firestore error", error.message.toString())
-                    return
-                }
-
-                if (value != null && value.documents.isNotEmpty()) {
-                    val document = value.documents.first()
-                    totalBudget = document.getDouble("amount") ?: 0.0
-                    totalBudgetTextView.text = "R$totalBudget"
-                }
-
-                BudgetAdapter.notifyDataSetChanged()
+            override fun onFailure(call: Call<TotalBudgetResponse>, t: Throwable) {
+                Log.e("API Failure", "Failed to fetch total budget", t)
             }
         })
     }

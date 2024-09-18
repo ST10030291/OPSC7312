@@ -72,6 +72,7 @@
             android:background="@drawable/blue5_rounded_border">
 
             <TextView
+                android:id="@+id/tv1"
                 android:layout_width="338dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -85,28 +86,46 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/availableBudgetForMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tv1"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="61dp"
-                android:text="@string/budget_zar"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                android:layout_marginStart="152dp"
+                android:layout_marginTop="47dp"
+                android:text="@string/r0_00"
+                android:textStyle="bold"
+                android:textColor="@color/blue_1"
+                android:textSize="25sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginStart="12dp"
+                android:paddingTop="20dp"
+                android:layout_marginTop="61dp"
+                android:text="@string/budget_zar"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_below="@id/availableBudgetForMonth"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="20dp"
                 android:layout_marginStart="212dp"
                 android:layout_marginTop="61dp"
                 android:text="@string/transactions"
                 android:textColor="@color/white"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_below="@id/availableBudgetForMonth"/>
 
             <TextView
                 android:id="@+id/availableBudget"
@@ -161,34 +180,5 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:scrollbars="vertical" />
-
-        <TextView
-            android:id="@+id/recentTransactionsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/budgetBreakdownRecyclerView"
-            android:layout_marginStart="22dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/recent_transactions"
-            android:textColor="@color/blue_10"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <!-- RecyclerView for Recent Transactions -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recentTransactionsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/recentTransactionsTitle"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="22dp"
-            android:layout_marginEnd="22dp"
-            android:clipToPadding="false"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:scrollbars="vertical" />
-
     </RelativeLayout>
 </ScrollView>

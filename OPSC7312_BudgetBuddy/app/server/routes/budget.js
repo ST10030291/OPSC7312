@@ -30,4 +30,26 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  const budgetId = req.params.id;
+  const { spentBudget } = req.body; // Ensure that spentBudget is sent in the request body
+
+  try {
+    // Check if the budget exists
+    const budgetRef = db.collection('budgets').doc(budgetId);
+    const doc = await budgetRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Budget not found' });
+    }
+
+    // Update the spentBudget field
+    await budgetRef.update({ spentBudget });
+
+    res.status(200).json({ message: 'Budget updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+  }
+});
+
 module.exports = router;

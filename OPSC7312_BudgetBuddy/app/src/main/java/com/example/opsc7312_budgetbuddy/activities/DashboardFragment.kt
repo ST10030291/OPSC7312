@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
+import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
+import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,6 +32,7 @@ class DashboardFragment : Fragment() {
     private lateinit var totalBudgetTextView: TextView
     private lateinit var retrofit: Retrofit
     private lateinit var budgetApiService: BudgetApi
+    private lateinit var transactionApiService: TransactionApi
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +55,9 @@ class DashboardFragment : Fragment() {
         recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
 
         budgetApiService = retrofit.create(BudgetApi::class.java)
+        transactionApiService = retrofit.create(TransactionApi::class.java)
 
+        // Display a welcome message with the users name for added personalization
         val userEmail = user?.email
         val userName = userEmail?.substringBefore("@") ?: "User"
         view.findViewById<TextView>(R.id.welcomeTextView).text = "Welcome, $userName"
@@ -65,11 +70,15 @@ class DashboardFragment : Fragment() {
         BudgetAdapter = BudgetAdapter(BudgetItems)
         recyclerView.adapter = BudgetAdapter
 
+        // Display Total Budget set for the month
         totalBudgetTextView = view.findViewById(R.id.availableBudget)
 
+        // Update Total Available Budget and Amount of Transactions
         fetchTotalBudget()
+        fetchTransactionCount()
     }
 
+    // Method to fetch the total available budget for the month from the API
     private fun fetchTotalBudget() {
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -87,7 +96,7 @@ class DashboardFragment : Fragment() {
                         val totalBudget = latestBudget?.totalBudget ?: 0.0
                         totalBudgetTextView.text = "${totalBudget}"
                     } else {
-                        totalBudgetTextView.text = "No budgets found."
+                        totalBudgetTextView.text = "R0.00"
                     }
                 } else {
                     Log.e("API Error", "Error fetching total budget")
@@ -99,4 +108,32 @@ class DashboardFragment : Fragment() {
             }
         })
     }
+
+    // Method to fetch the transaction count from the API
+    private fun fetchTransactionCount() {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
+
+        transactionApiService.getAllTransactions(userId).enqueue(object : Callback<List<TransactionModel>> {
+            override fun onResponse(
+                call: Call<List<TransactionModel>>,
+                response: Response<List<TransactionModel>>
+            ) {
+                if (response.isSuccessful) {
+                    val transactions = response.body() ?: emptyList()
+                    val transactionCount = transactions.size
+                    // Update the UI with the transaction count
+                    view?.findViewById<TextView>(R.id.totalTransactions)?.text = "$transactionCount"
+                } else {
+                    Log.e("API Error", "Error fetching transactions")
+                }
+            }
+
+            override fun onFailure(call: Call<List<TransactionModel>>, t: Throwable) {
+                Log.e("API Failure", "Failed to fetch transactions", t)
+            }
+        })
+    }
+
+
 }

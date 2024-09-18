@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -18,5 +19,7 @@ interface BudgetApi {
     @GET("budgets")
     fun getBudgetsByUserId(@Query("userId") userId: String): Call<List<BudgetModel>>
 
+    @PUT("budgets/{id}")
+    fun updateBudget(@Path("id") id: String, @Body budgetModel: BudgetModel): Call<BudgetResponse>
 
 }

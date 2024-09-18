@@ -1,6 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
@@ -160,6 +161,7 @@ class Dashboard : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
+            val spentBudget = 0.0
 
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://budgetapp-amber.vercel.app/api/")
@@ -168,7 +170,7 @@ class Dashboard : AppCompatActivity() {
 
             val api = retrofit.create(BudgetApi::class.java)
 
-            val budgetModel = BudgetModel(id = null,userId, month,totalBudget, expenseList)
+            val budgetModel = BudgetModel(id = null,userId, month, spentBudget ,totalBudget, expenseList)
 
             api.addBudget(budgetModel).enqueue(object : Callback<BudgetResponse> {
                 override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {
@@ -177,6 +179,7 @@ class Dashboard : AppCompatActivity() {
                         if (budgetID != null) {
                             budgetModel.id = budgetID
                             budgetList.add(budgetModel)
+
                             Log.d("BudgetApi", "Budget added successfully")
                         } else {
                             Log.e("BudgetApi", "No ID received from the server")
@@ -191,7 +194,13 @@ class Dashboard : AppCompatActivity() {
                 }
             })
 
+            // Reload the page for the budget to reflect the new budget
+            val intent = Intent(this, javaClass)
+            finish()
+            startActivity(intent)
             dialog.dismiss()
+
+            Toast.makeText(this, "Budget added successfully", Toast.LENGTH_SHORT).show()
         }
 
         cancelButton.setOnClickListener { dialog.dismiss() }
@@ -228,7 +237,13 @@ class Dashboard : AppCompatActivity() {
 
             transactionCRUD.saveTransaction(transactionModel)
 
+            // Reload the page for transaction count to reflect the new transaction
+            val intent = Intent(this, javaClass)
+            finish()
+            startActivity(intent)
             dialog.dismiss()
+
+            Toast.makeText(this, "Transaction added successfully", Toast.LENGTH_SHORT).show()
         }
 
         cancelButton.setOnClickListener { dialog.dismiss() }
@@ -253,6 +268,4 @@ class Dashboard : AppCompatActivity() {
             }
         )
     }
-
 }
-

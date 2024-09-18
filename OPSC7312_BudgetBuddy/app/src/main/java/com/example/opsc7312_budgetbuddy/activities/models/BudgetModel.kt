@@ -13,6 +13,7 @@ data class BudgetModel(
     var id: String?,
     val userId: String = "",
     val month: String = "",
+    val spentBudget: Double = 0.0,
     val totalBudget: Double = 0.0,
     val categories: List<Category> = listOf()
 )

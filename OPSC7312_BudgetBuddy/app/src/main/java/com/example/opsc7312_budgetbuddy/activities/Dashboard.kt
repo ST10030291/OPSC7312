@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.Window
@@ -12,18 +13,27 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
+import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
+import com.example.opsc7312_budgetbuddy.activities.models.BudgetResponse
 import com.example.opsc7312_budgetbuddy.activities.models.Category
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.example.opsc7312_budgetbuddy.databinding.ActivityDashboardBinding
+import com.google.firebase.auth.FirebaseAuth
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 
 class Dashboard : AppCompatActivity() {
@@ -31,6 +41,7 @@ class Dashboard : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var transactionCRUD: TransactionCRUD
     private lateinit var budgetCRUD: budgetCRUD
+    private var budgetList: MutableList<BudgetModel> = mutableListOf()
     private var expenseList: MutableList<Category> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
     private lateinit var addExpenseAdapter: AddExpenseAdapter
@@ -44,6 +55,7 @@ class Dashboard : AppCompatActivity() {
 
         transactionCRUD = TransactionCRUD()
         budgetCRUD = budgetCRUD()
+        loadBudgets()
 
         // Set default fragment
         loadFragment(DashboardFragment())
@@ -109,13 +121,6 @@ class Dashboard : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
@@ -140,6 +145,8 @@ class Dashboard : AppCompatActivity() {
         var recyclerView = dialog.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
 
         addExpenseAdapter = AddExpenseAdapter(expenseList)
         recyclerView.adapter = addExpenseAdapter
@@ -151,25 +158,38 @@ class Dashboard : AppCompatActivity() {
         }
 
 
-
-
-
-        //TODO Kaushil
-        //val month = getmonth
-        //val category = recyclercategory
-
-        /*val categoryList = listOf(
-            Category(categoryName = "Groceries", amount = 500.0),
-            Category(categoryName = "Rent", amount = 1200.0),
-            Category(categoryName = "Entertainment", amount = 300.0)
-        )*/
-
         saveButton.setOnClickListener {
             val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
 
-            val budgetModel = BudgetModel(month,totalBudget, expenseList)
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://budgetapp-amber.vercel.app/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
 
-            budgetCRUD.saveBudget(budgetModel)
+            val api = retrofit.create(BudgetApi::class.java)
+
+            val budgetModel = BudgetModel(id = null,userId, month,totalBudget, expenseList)
+
+            api.addBudget(budgetModel).enqueue(object : Callback<BudgetResponse> {
+                override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {
+                    if (response.isSuccessful) {
+                        val budgetID = response.body()?.id
+                        if (budgetID != null) {
+                            budgetModel.id = budgetID
+                            budgetList.add(budgetModel)
+                            Log.d("BudgetApi", "Budget added successfully")
+                        } else {
+                            Log.e("BudgetApi", "No ID received from the server")
+                        }
+                    } else {
+                        Log.e("BudgetApi", "Error: ${response.code()} - ${response.message()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<BudgetResponse>, t: Throwable) {
+                    Log.e("BudgetApi", "Failed to add budget", t)
+                }
+            })
 
             dialog.dismiss()
         }
@@ -195,6 +215,8 @@ class Dashboard : AppCompatActivity() {
         val categorySpinner = dialog.findViewById<Spinner>(R.id.categoryInput)
         val saveButton = dialog.findViewById<Button>(R.id.createTransactionButton)
         val cancelButton = dialog.findViewById<ImageView>(R.id.cancelButton)
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
 
         saveButton.setOnClickListener {
             val name = transactionName.text.toString()
@@ -202,7 +224,7 @@ class Dashboard : AppCompatActivity() {
             val amount: Double = amountText.toDoubleOrNull() ?: 0.0
             val category = categorySpinner.selectedItem.toString()
 
-            val transactionModel = TransactionModel(name, amount, category)
+            val transactionModel = TransactionModel(userId,name, amount, category)
 
             transactionCRUD.saveTransaction(transactionModel)
 
@@ -220,12 +242,17 @@ class Dashboard : AppCompatActivity() {
         dialog.window!!.setGravity(Gravity.BOTTOM)
     }
 
-
-
-
-
-
-
+    private fun loadBudgets() {
+        budgetCRUD.getBudgets(
+            onSuccess = { recipes ->
+                budgetList.clear()
+                budgetList.addAll(recipes)
+            },
+            onError = { errorMessage ->
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
 
 }
 

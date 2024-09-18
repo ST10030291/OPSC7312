@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 data class TransactionModel(
+    val userId: String = "",
     val transactionName: String= "",
     val transactionAmount: Double= 0.0,
     val categoryName: String= ""
@@ -17,7 +18,7 @@ data class TransactionModel(
 //The TransactionCRUD class is responsible for CRUD operations for transactions
 class TransactionCRUD{
 
-    public fun saveTransaction(transactionModel: TransactionModel) {
+    fun saveTransaction(transactionModel: TransactionModel) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())

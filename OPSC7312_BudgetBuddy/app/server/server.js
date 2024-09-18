@@ -23,7 +23,6 @@ const transactionRoutes = require('./routes/transaction');
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/transactions', transactionRoutes);
 
-//doesnt work yet
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });

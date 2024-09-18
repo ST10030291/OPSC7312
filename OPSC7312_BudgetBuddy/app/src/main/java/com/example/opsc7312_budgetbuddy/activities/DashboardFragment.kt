@@ -14,19 +14,13 @@ import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
-import com.example.opsc7312_budgetbuddy.activities.models.TotalBudgetResponse
-import com.example.opsc7312_budgetbuddy.activities.models.TransactionAdapter
-import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
+import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
 import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class DashboardFragment : Fragment() {
 
@@ -46,6 +40,8 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
 
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
@@ -57,8 +53,6 @@ class DashboardFragment : Fragment() {
 
         budgetApiService = retrofit.create(BudgetApi::class.java)
 
-        // Get the current user's email and display the first part as the name
-        val user = FirebaseAuth.getInstance().currentUser
         val userEmail = user?.email
         val userName = userEmail?.substringBefore("@") ?: "User"
         view.findViewById<TextView>(R.id.welcomeTextView).text = "Welcome, $userName"
@@ -77,23 +71,30 @@ class DashboardFragment : Fragment() {
     }
 
     private fun fetchTotalBudget() {
+
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
 
-        budgetApiService.getTotalBudget(userId).enqueue(object : retrofit2.Callback<TotalBudgetResponse> {
+        budgetApiService.getBudgetsByUserId(userId).enqueue(object : Callback<List<BudgetModel>> {
             override fun onResponse(
-                call: Call<TotalBudgetResponse>,
-                response: retrofit2.Response<TotalBudgetResponse>
+                call: Call<List<BudgetModel>>,
+                response: Response<List<BudgetModel>>
             ) {
                 if (response.isSuccessful) {
-                    val totalBudget = response.body()?.totalBudget ?: 0.0
-                    totalBudgetTextView.text = "Total Budget: $${totalBudget}"
+                    val budgets = response.body() ?: emptyList()
+                    if (budgets.isNotEmpty()) {
+                        val latestBudget = budgets.maxByOrNull { it.month }
+                        val totalBudget = latestBudget?.totalBudget ?: 0.0
+                        totalBudgetTextView.text = "${totalBudget}"
+                    } else {
+                        totalBudgetTextView.text = "No budgets found."
+                    }
                 } else {
                     Log.e("API Error", "Error fetching total budget")
                 }
             }
 
-            override fun onFailure(call: Call<TotalBudgetResponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<BudgetModel>>, t: Throwable) {
                 Log.e("API Failure", "Failed to fetch total budget", t)
             }
         })

@@ -6,6 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 //Actions for API POST AND GET for transactions
 interface TransactionApi {
@@ -13,8 +14,6 @@ interface TransactionApi {
     fun addTransaction(@Body transactionModel: TransactionModel): Call<Void>
 
     @GET("transactions")
-    fun getAllTransactions(): Call<List<TransactionModel>>
+    fun getAllTransactions(@Query("userId") userId: String): Call<List<TransactionModel>>
 
-    @GET("transactions/{id}")
-    fun getTransactionById(@Path("id") id: String): Call<TransactionModel>
 }

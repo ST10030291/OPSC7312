@@ -161,7 +161,6 @@ class Dashboard : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
-            val spentBudget = 0.0
 
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://budgetapp-amber.vercel.app/api/")
@@ -170,7 +169,7 @@ class Dashboard : AppCompatActivity() {
 
             val api = retrofit.create(BudgetApi::class.java)
 
-            val budgetModel = BudgetModel(id = null,userId, month, spentBudget ,totalBudget, expenseList)
+            val budgetModel = BudgetModel(id = null,userId, month ,totalBudget, expenseList)
 
             api.addBudget(budgetModel).enqueue(object : Callback<BudgetResponse> {
                 override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {

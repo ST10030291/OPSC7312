@@ -30,23 +30,36 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const budgetId = req.params.id;
-  const { spentBudget } = req.body; // Ensure that spentBudget is sent in the request body
+// Get remaining budget for a user
+router.get('/remaining-budget', async (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
 
   try {
-    // Check if the budget exists
-    const budgetRef = db.collection('budgets').doc(budgetId);
-    const doc = await budgetRef.get();
-
-    if (!doc.exists) {
-      return res.status(404).json({ error: 'Budget not found' });
+    // Fetch the total budget for the user
+    const budgetSnapshot = await db.collection('budgets').where('userId', '==', userId).get();
+    if (budgetSnapshot.empty) {
+      return res.status(404).json({ error: 'No budget found for this user' });
     }
 
-    // Update the spentBudget field
-    await budgetRef.update({ spentBudget });
+    const budgetDoc = budgetSnapshot.docs[0].data();
+    const totalBudget = budgetDoc.totalBudget;
 
-    res.status(200).json({ message: 'Budget updated successfully' });
+    // Calculate total transactions amount
+    const transactionsSnapshot = await db.collection('transactions').where('userId', '==', userId).get();
+    let totalSpent = 0;
+
+    transactionsSnapshot.forEach(doc => {
+      const transaction = doc.data();
+      totalSpent += transaction.amount;
+    });
+
+    // Calculate remaining budget
+    const remainingBudget = totalBudget - totalSpent;
+
+    res.status(200).json({ remainingBudget });
   } catch (error) {
     res.status(500).json({ error: error.toString() });
   }

@@ -1,5 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
@@ -30,6 +33,7 @@ class DashboardFragment : Fragment() {
     private lateinit var BudgetItems: MutableList<BudgetItem>
     private lateinit var BudgetAdapter: BudgetAdapter
     private lateinit var totalBudgetTextView: TextView
+    private lateinit var availableBudgetForMonth: TextView
     private lateinit var retrofit: Retrofit
     private lateinit var budgetApiService: BudgetApi
     private lateinit var transactionApiService: TransactionApi
@@ -72,10 +76,12 @@ class DashboardFragment : Fragment() {
 
         // Display Total Budget set for the month
         totalBudgetTextView = view.findViewById(R.id.availableBudget)
+        availableBudgetForMonth = view.findViewById(R.id.availableBudgetForMonth)
 
         // Update Total Available Budget and Amount of Transactions
         fetchTotalBudget()
         fetchTransactionCount()
+        fetchRemainingBudget()
     }
 
     // Method to fetch the total available budget for the month from the API
@@ -135,5 +141,55 @@ class DashboardFragment : Fragment() {
         })
     }
 
+    // Method to fetch and display the remaining budget
+    private fun fetchRemainingBudget() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
+        val budgetCall = budgetApiService.getBudgetsByUserId(userId)
+        val transactionCall = transactionApiService.getAllTransactions(userId)
+
+        // Make parallel API calls
+        budgetCall.enqueue(object : Callback<List<BudgetModel>> {
+            override fun onResponse(
+                call: Call<List<BudgetModel>>,
+                response: Response<List<BudgetModel>>
+            ) {
+                if (response.isSuccessful) {
+                    val budgets = response.body() ?: emptyList()
+                    val latestBudget = budgets.maxByOrNull { it.month }
+                    val totalBudget = latestBudget?.totalBudget ?: 0.0
+
+                    // Fetch transactions and calculate remaining budget
+                    transactionCall.enqueue(object : Callback<List<TransactionModel>> {
+                        override fun onResponse(
+                            call: Call<List<TransactionModel>>,
+                            response: Response<List<TransactionModel>>
+                        ) {
+                            if (response.isSuccessful) {
+                                val transactions = response.body() ?: emptyList()
+                                val totalSpent = transactions.sumOf { it.transactionAmount }
+                                val remainingBudget = totalBudget - totalSpent
+
+                                // Update the correct TextView
+                                totalBudgetTextView.text = "R$totalBudget"
+                                availableBudgetForMonth.text = "R$remainingBudget"
+                            } else {
+                                Log.e("API Error", "Error fetching transactions for remaining budget")
+                            }
+                        }
+
+                        override fun onFailure(call: Call<List<TransactionModel>>, t: Throwable) {
+                            Log.e("API Failure", "Failed to fetch transactions for remaining budget", t)
+                        }
+                    })
+                } else {
+                    Log.e("API Error", "Error fetching budget for remaining budget calculation")
+                }
+            }
+
+            override fun onFailure(call: Call<List<BudgetModel>>, t: Throwable) {
+                Log.e("API Failure", "Failed to fetch budget for remaining budget calculation", t)
+            }
+        })
+    }
 }

@@ -33,8 +33,7 @@ class TransactionCRUD{
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     Log.d("TransactionApi", "Transaction added successfully")
-                    // Update budget after transaction has been added
-                    updateBudgetAfterTransaction(transactionModel)
+
                 } else {
                     Log.e("TransactionApi", response.toString())
                 }
@@ -42,61 +41,6 @@ class TransactionCRUD{
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("TransactionApi", "Error: ${t.message}")
-            }
-        })
-    }
-
-    private fun updateBudgetAfterTransaction(transaction: TransactionModel) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://budgetapp-amber.vercel.app/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(BudgetApi::class.java)
-
-        // Fetch the user's budget for the current month
-        api.getBudgetsByUserId(transaction.userId).enqueue(object : Callback<List<BudgetModel>> {
-            override fun onResponse(call: Call<List<BudgetModel>>, response: Response<List<BudgetModel>>) {
-                if (response.isSuccessful) {
-                    val budgets = response.body()
-                    if (!budgets.isNullOrEmpty()) {
-                        // Assuming the first budget is for the current month (you might want to refine this)
-                        val budget = budgets[0]
-
-                        // Find the category in which the transaction was made
-                        val category = budget.categories.find { it.categoryName == transaction.categoryName }
-
-                        if (category != null) {
-                            // Update the category's amount based on the transaction
-                            category.amount -= transaction.transactionAmount
-
-                            // Now, update the budget on the server
-                            api.updateBudget(budget.id!!, budget).enqueue(object : Callback<BudgetResponse> {
-                                override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {
-                                    if (response.isSuccessful) {
-                                        Log.d("BudgetApi", "Budget updated successfully")
-                                    } else {
-                                        Log.e("BudgetApi", "Error updating budget: ${response.code()} - ${response.message()}")
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<BudgetResponse>, t: Throwable) {
-                                    Log.e("BudgetApi", "Failed to update budget", t)
-                                }
-                            })
-                        } else {
-                            Log.e("BudgetApi", "Category not found in the user's budget")
-                        }
-                    } else {
-                        Log.e("BudgetApi", "No budget found for the user")
-                    }
-                } else {
-                    Log.e("BudgetApi", "Error fetching budget: ${response.code()}")
-                }
-            }
-
-            override fun onFailure(call: Call<List<BudgetModel>>, t: Throwable) {
-                Log.e("BudgetApi", "Failed to fetch budget", t)
             }
         })
     }

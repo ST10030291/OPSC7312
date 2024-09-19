@@ -2,6 +2,7 @@ package com.example.opsc7312_budgetbuddy.activities.interfaces
 
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetResponse
+import com.example.opsc7312_budgetbuddy.activities.models.RemainingBudgetResponse
 import com.example.opsc7312_budgetbuddy.activities.models.TotalBudgetResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -19,7 +20,6 @@ interface BudgetApi {
     @GET("budgets")
     fun getBudgetsByUserId(@Query("userId") userId: String): Call<List<BudgetModel>>
 
-    @PUT("budgets/{id}")
-    fun updateBudget(@Path("id") id: String, @Body budgetModel: BudgetModel): Call<BudgetResponse>
-
+    @GET("remaining-budget")
+    fun getRemainingBudget(@Query("userId") userId: String): Call<RemainingBudgetResponse>
 }

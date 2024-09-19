@@ -13,7 +13,6 @@ data class BudgetModel(
     var id: String?,
     val userId: String = "",
     val month: String = "",
-    val spentBudget: Double = 0.0,
     val totalBudget: Double = 0.0,
     val categories: List<Category> = listOf()
 )
@@ -21,6 +20,10 @@ data class BudgetModel(
 data class Category(
     var categoryName: String = "",
     var amount: Double = 0.0
+)
+
+data class RemainingBudgetResponse(
+    val remainingBudget: Double
 )
 
 data class BudgetResponse(val id: String)

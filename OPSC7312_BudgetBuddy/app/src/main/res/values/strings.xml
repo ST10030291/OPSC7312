@@ -36,4 +36,6 @@
     <string name="_124_545_00" translatable="false">124 545, 00</string>
     <string name="food">Food</string>
     <string name="recent_transactions">Recent Transactions</string>
+    <string name="category_name">Category Name</string>
+    <string name="amount">Amount</string>
 </resources>

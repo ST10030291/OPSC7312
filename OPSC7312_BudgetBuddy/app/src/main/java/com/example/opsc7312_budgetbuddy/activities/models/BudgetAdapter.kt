@@ -3,7 +3,6 @@ package com.example.opsc7312_budgetbuddy.activities.models
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
@@ -35,5 +34,3 @@ data class BudgetItem(
     val categoryName: String = "",
     val amount: Double = 0.0
 )
-
-

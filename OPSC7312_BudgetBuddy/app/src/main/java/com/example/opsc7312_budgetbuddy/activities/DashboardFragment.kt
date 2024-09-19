@@ -20,6 +20,7 @@ import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
+import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -82,7 +83,41 @@ class DashboardFragment : Fragment() {
         fetchTotalBudget()
         fetchTransactionCount()
         fetchRemainingBudget()
+        fetchBudgets()
     }
+
+    // Method to fetch Category Name and Amount from the API for Budget Breakdown
+    private fun fetchBudgets() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        // Create an instance of budgetCRUD
+        val budgetCRUD = budgetCRUD()
+
+        budgetCRUD.getBudgets(onSuccess = { budgetModels ->
+            // Extract categories from each BudgetModel
+            val budgetItems = mutableListOf<BudgetItem>()
+
+            for (budgetModel in budgetModels) {
+                for (category in budgetModel.categories) {
+                    budgetItems.add(
+                        BudgetItem(
+                            categoryName = category.categoryName,
+                            amount = category.amount
+                        )
+                    )
+                }
+            }
+
+            // Update the adapter with the new data
+            if (budgetItems.isNotEmpty()) {
+                val adapter = BudgetAdapter(budgetItems)
+                recyclerView.adapter = adapter
+            }
+        }, onError = { errorMessage ->
+            Log.e("API Error", errorMessage)
+        })
+    }
+
 
     // Method to fetch the total available budget for the month from the API
     private fun fetchTotalBudget() {

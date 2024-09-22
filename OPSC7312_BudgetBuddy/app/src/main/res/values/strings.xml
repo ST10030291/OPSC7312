@@ -38,4 +38,10 @@
     <string name="recent_transactions">Recent Transactions</string>
     <string name="category_name">Category Name</string>
     <string name="amount">Amount</string>
+    <string name="keys">Keys</string>
+    <string name="set_a_budget_via_the_pop_up_button">Set a budget via the pop up button</string>
+    <string name="budget_for_the_month">Budget for the month</string>
+    <string name="budget_spent_so_far">Budget Spent so far</string>
+    <string name="budget_available">Budget Available</string>
+    <string name="monthly_budget_insight">Monthly Budget Insight</string>
 </resources>

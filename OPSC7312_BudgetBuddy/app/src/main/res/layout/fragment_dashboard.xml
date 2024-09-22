@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/blue_1"
     tools:context=".activities.DashboardFragment">
 
@@ -63,6 +64,7 @@
             android:textStyle="bold" />
 
         <RelativeLayout
+            android:id="@+id/layout1"
             android:layout_width="373dp"
             android:layout_height="159dp"
             android:layout_below="@+id/welcomeTextView"
@@ -181,5 +183,127 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="22dp"
+            android:layout_below="@id/budgetBreakdownRecyclerView"
+            android:text="@string/monthly_budget_insight"
+            android:textColor="@color/blue_10"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+
+        <!-- Nested Circular Progress Bars in RelativeLayout -->
+        <RelativeLayout
+            android:id="@+id/circularProgressBar"
+            android:layout_below="@id/budgetBreakdownRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:background="@drawable/blue5_rounded_border">
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressBarBudget"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"
+                app:cpb_progressbar_color="@color/red"
+                app:cpb_progressbar_width="10dp"
+                app:cpb_background_progressbar_color="#b6bbd8"
+                app:cpb_background_progressbar_width="5dp"
+                app:cpb_round_border="true"
+                app:cpb_start_angle="0"
+                app:cpb_progress_direction="to_right" />
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressBarSpent"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_centerInParent="true"
+                app:cpb_progressbar_color="@color/blue_10"
+                app:cpb_progressbar_width="10dp"
+                app:cpb_background_progressbar_color="#b6bbd8"
+                app:cpb_background_progressbar_width="5dp"
+                app:cpb_round_border="true"
+                app:cpb_start_angle="0"
+                app:cpb_progress_direction="to_right" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/keys"
+            android:layout_below="@+id/circularProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/blue5_rounded_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/keys"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="160dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/budget_for_the_month"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/blue_10"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/budget_available"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginStart="5dp"
+                android:textStyle="italic"
+                android:text="@string/set_a_budget_via_the_pop_up_button"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp"/>
+
     </RelativeLayout>
 </ScrollView>

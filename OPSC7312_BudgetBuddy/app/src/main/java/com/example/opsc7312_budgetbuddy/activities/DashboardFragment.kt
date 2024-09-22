@@ -22,6 +22,7 @@ import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.google.firebase.auth.FirebaseAuth
+import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -29,6 +30,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DashboardFragment : Fragment() {
+
+    // Global variables
+    private var circularTotalBudget: Double = 0.0
+    private var circularAvailableBudget: Double = 0.0
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var BudgetItems: MutableList<BudgetItem>
@@ -38,6 +43,8 @@ class DashboardFragment : Fragment() {
     private lateinit var retrofit: Retrofit
     private lateinit var budgetApiService: BudgetApi
     private lateinit var transactionApiService: TransactionApi
+    private lateinit var circularProgressBarBudget: CircularProgressBar
+    private lateinit var circularProgressBarSpent: CircularProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +63,10 @@ class DashboardFragment : Fragment() {
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
+        // Initialize Circular Progress Bars
+        circularProgressBarBudget = view.findViewById(R.id.circularProgressBarBudget)
+        circularProgressBarSpent = view.findViewById(R.id.circularProgressBarSpent)
 
         recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
 
@@ -84,6 +95,7 @@ class DashboardFragment : Fragment() {
         fetchTransactionCount()
         fetchRemainingBudget()
         fetchBudgets()
+        updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
     }
 
     // Method to fetch Category Name and Amount from the API for Budget Breakdown
@@ -135,6 +147,7 @@ class DashboardFragment : Fragment() {
                     if (budgets.isNotEmpty()) {
                         val latestBudget = budgets.maxByOrNull { it.month }
                         val totalBudget = latestBudget?.totalBudget ?: 0.0
+                        circularTotalBudget = totalBudget
                         totalBudgetTextView.text = "${totalBudget}"
                     } else {
                         totalBudgetTextView.text = "R0.00"
@@ -176,7 +189,7 @@ class DashboardFragment : Fragment() {
         })
     }
 
-    // Method to fetch and display the remaining budget
+// Method to fetch and display the remaining budget
     private fun fetchRemainingBudget() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -193,6 +206,7 @@ class DashboardFragment : Fragment() {
                     val budgets = response.body() ?: emptyList()
                     val latestBudget = budgets.maxByOrNull { it.month }
                     val totalBudget = latestBudget?.totalBudget ?: 0.0
+                    circularTotalBudget = totalBudget // Update global variable
 
                     // Fetch transactions and calculate remaining budget
                     transactionCall.enqueue(object : Callback<List<TransactionModel>> {
@@ -204,10 +218,14 @@ class DashboardFragment : Fragment() {
                                 val transactions = response.body() ?: emptyList()
                                 val totalSpent = transactions.sumOf { it.transactionAmount }
                                 val remainingBudget = totalBudget - totalSpent
+                                circularAvailableBudget = remainingBudget // Update global variable
 
                                 // Update the correct TextView
                                 totalBudgetTextView.text = "R$totalBudget"
                                 availableBudgetForMonth.text = "R$remainingBudget"
+
+                                // Now update the progress bars with the correct values
+                                updateCircularProgressBars(circularTotalBudget, circularAvailableBudget)
                             } else {
                                 Log.e("API Error", "Error fetching transactions for remaining budget")
                             }
@@ -226,5 +244,22 @@ class DashboardFragment : Fragment() {
                 Log.e("API Failure", "Failed to fetch budget for remaining budget calculation", t)
             }
         })
+    }
+
+// Method to update circular progress bar with budget values
+    fun updateCircularProgressBars(totalBudget: Double, availableBudget: Double) {
+        if (totalBudget > 0) {
+            // Calculate percentage spent and remaining
+            val val1 = totalBudget * 100
+            val val2 = (availableBudget / totalBudget) * 100
+
+            // Update progress bars
+            circularProgressBarSpent.setProgressWithAnimation(val1.toFloat(), 1000) // Spent amount
+            circularProgressBarBudget.setProgressWithAnimation(val2.toFloat(), 1000) // Remaining amount
+        } else {
+            // Handle the case where totalBudget is 0 to avoid division by zero
+            circularProgressBarSpent.setProgressWithAnimation(0f, 1000)
+            circularProgressBarBudget.setProgressWithAnimation(0f, 1000)
+        }
     }
 }

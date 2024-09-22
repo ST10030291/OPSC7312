@@ -189,7 +189,7 @@ class DashboardFragment : Fragment() {
         })
     }
 
-// Method to fetch and display the remaining budget
+    // Method to fetch and display the remaining budget
     private fun fetchRemainingBudget() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
@@ -246,7 +246,7 @@ class DashboardFragment : Fragment() {
         })
     }
 
-// Method to update circular progress bar with budget values
+    // Method to update circular progress bar with budget values
     fun updateCircularProgressBars(totalBudget: Double, availableBudget: Double) {
         if (totalBudget > 0) {
             // Calculate percentage spent and remaining

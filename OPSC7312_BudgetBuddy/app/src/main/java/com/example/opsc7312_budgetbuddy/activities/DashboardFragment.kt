@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
@@ -21,7 +22,9 @@ import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -34,7 +37,7 @@ class DashboardFragment : Fragment() {
     // Global variables
     private var circularTotalBudget: Double = 0.0
     private var circularAvailableBudget: Double = 0.0
-
+    private lateinit var profileImageView: ShapeableImageView
     private lateinit var recyclerView: RecyclerView
     private lateinit var BudgetItems: MutableList<BudgetItem>
     private lateinit var BudgetAdapter: BudgetAdapter
@@ -57,7 +60,8 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
-
+        profileImageView = view.findViewById(R.id.account_btn)
+        loadProfileImageFromFirebaseStorage()
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
@@ -260,6 +264,20 @@ class DashboardFragment : Fragment() {
             // Handle the case where totalBudget is 0 to avoid division by zero
             circularProgressBarSpent.setProgressWithAnimation(0f, 1000)
             circularProgressBarBudget.setProgressWithAnimation(0f, 1000)
+        }
+    }
+
+    private fun loadProfileImageFromFirebaseStorage() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
+
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .placeholder(R.drawable.baseline_account_circle_24)
+                .into(profileImageView)
+        }.addOnFailureListener {
+            Log.e("Firebase Storage", "Error loading image", it)
         }
     }
 }

@@ -37,16 +37,20 @@
             android:clickable="true"
             android:focusable="true" />
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/account_btn"
             android:layout_width="50dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="19dp"
+            android:adjustViewBounds="true"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@color/blue_10"
-            android:src="@drawable/account_icon"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:shapeAppearanceOverlay="@style/RoundedSquare"
             android:clickable="true"
             android:focusable="true" />
 

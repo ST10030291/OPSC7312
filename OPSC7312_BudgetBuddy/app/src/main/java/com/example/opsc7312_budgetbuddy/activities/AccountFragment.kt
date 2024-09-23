@@ -1,8 +1,12 @@
 package com.example.opsc7312_budgetbuddy.activities
 
+import android.Manifest
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,16 +15,26 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.adapters.BudgetHistoryAdapter
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +53,12 @@ class AccountFragment : Fragment() {
     private lateinit var totalBudgetAmountTextView: TextView
     private lateinit var budgetAdapter: BudgetHistoryAdapter
     private var budgetList: MutableList<BudgetModel> = mutableListOf()
+    private var imageUri: Uri? = null
     private  lateinit var BudgetCRUD: budgetCRUD
+    private lateinit var profileImageView: ShapeableImageView
+    private lateinit var auth: FirebaseAuth
+    private lateinit var  storageRef: StorageReference
+    private lateinit var databaseRef: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +69,18 @@ class AccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        databaseSetup()
+        loadProfileImageFromFirebaseStorage()
+        sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0)
+        val savedLanguage = sharedPreferences.getString(LANGUAGE_KEY, "en")
+        val languageSwitch = view.findViewById<SwitchCompat>(R.id.languageSwitch)
+        val changeProfilePicBtn = view.findViewById<ImageView>(R.id.change_profile_icon)
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid ?: return
+        val userEmail = user.email
+        val userName = userEmail?.substringBefore("@") ?: "User"
+        profileImageView = view.findViewById(R.id.profile_image)
+
         retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -57,18 +88,11 @@ class AccountFragment : Fragment() {
 
         BudgetCRUD = budgetCRUD()
         budgetApiService = retrofit.create(BudgetApi::class.java)
-        val user = FirebaseAuth.getInstance().currentUser
-        val userId = user?.uid ?: return
-        sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, 0)
 
-        val userEmail = user.email
-        val userName = userEmail?.substringBefore("@") ?: "User"
         view.findViewById<TextView>(R.id.tv_name).text = userName
         view.findViewById<TextView>(R.id.tv_email).text = "$userEmail"
 
         // Load saved language preference
-        val savedLanguage = sharedPreferences.getString(LANGUAGE_KEY, "en")
-        val languageSwitch = view.findViewById<SwitchCompat>(R.id.languageSwitch)
         languageSwitch.isChecked = savedLanguage == "af"
 
         // notification button click listener
@@ -87,6 +111,10 @@ class AccountFragment : Fragment() {
             restartFragment()
         }
 
+        changeProfilePicBtn.setOnClickListener{
+            selectImageLauncher.launch("image/*")
+        }
+
         budgetAdapter = BudgetHistoryAdapter(budgetList, requireContext())
         val budgetRecycler = view.findViewById<RecyclerView>(R.id.BudgetHistoryListView)
         budgetRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -95,6 +123,13 @@ class AccountFragment : Fragment() {
         fetchTotalBudget()
         totalBudgetsTextView = view.findViewById(R.id.tv_total_budgets)
         totalBudgetAmountTextView = view.findViewById(R.id.tv_total_budgeted)
+    }
+
+    private fun databaseSetup()
+    {
+        storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages")
+        auth = FirebaseAuth.getInstance()
+        databaseRef = Firebase.database.reference.child("Users").child(auth.currentUser?.uid!!)
     }
 
     private fun loadBudgets() {
@@ -161,4 +196,56 @@ class AccountFragment : Fragment() {
             }
         })
     }
+
+    private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            imageUri = it
+            profileImageView.setImageURI(it)
+            uploadImageToFirebase()
+        }
+    }
+
+    private fun saveImageUriToDatabase(uri: Uri)
+    {
+        databaseRef.child("profileImageUri").setValue(uri.toString())
+            .addOnSuccessListener{
+                Toast.makeText(requireContext(), "Profile image updated successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener{
+                Toast.makeText(requireContext(), "Failed to save image URI", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun uploadImageToFirebase() {
+        imageUri?.let {
+            val userId = auth.currentUser?.uid ?: return
+            val fileRef = storageRef.child("$userId.jpg")
+            fileRef.putFile(it)
+                .addOnSuccessListener {
+                    fileRef.downloadUrl.addOnSuccessListener { uri ->
+                        saveImageUriToDatabase(uri)
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+    private fun loadProfileImageFromFirebaseStorage() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
+
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .placeholder(R.drawable.baseline_account_circle_24)
+                .into(profileImageView)
+        }.addOnFailureListener {
+            Log.e("Firebase Storage", "Error loading image", it)
+        }
+    }
+
+
+
 }

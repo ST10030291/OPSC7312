@@ -190,31 +190,47 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/notification_btn"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="10dp"
-            android:contentDescription="@string/todo"
-            android:src="@drawable/notification_icon"
-            android:clickable="true"
-            android:focusable="true"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Profile Image -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="85dp"
+                android:adjustViewBounds="true"
+                android:background="@color/white"
+                android:elevation="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_account_circle_24"
+                app:shapeAppearanceOverlay="@style/RoundedSquare"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+            />
+            <ImageView
+                android:id="@+id/change_profile_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/change_profile_icon"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:elevation="4dp"
+                app:layout_constraintTop_toTopOf="@id/profile_image"
+                app:layout_constraintEnd_toEndOf="@id/profile_image"
+                android:clickable="true"
+                android:focusable="true"
+            />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profile_image"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="85dp"
-            android:adjustViewBounds="true"
-            android:elevation="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/placeholder"
-            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+
     </RelativeLayout>
 </FrameLayout>

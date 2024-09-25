@@ -44,4 +44,6 @@
     <string name="budget_spent_so_far">Budget Spent so far</string>
     <string name="budget_available">Budget Available</string>
     <string name="monthly_budget_insight">Monthly Budget Insight</string>
+    <string name="save_graph">Save Graph</string>
+    <string name="current_month_year">current_month_year</string>
 </resources>

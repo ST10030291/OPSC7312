@@ -3,51 +3,146 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/blue_1"
     tools:context=".activities.AnalyticsFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="30dp">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/pageName"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/analytics"
-            android:textColor="@color/blue_10"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp">
 
-        <ImageView
-            android:id="@+id/notification_btn"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="75dp"
-            android:src="@drawable/notification_icon"
-            android:clickable="true"
-            android:focusable="true"/>
 
-        <ImageView
-            android:id="@+id/account_btn"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/blue_10"
-            android:src="@drawable/account_icon"
-            android:clickable="true"
-            android:focusable="true"/>
+            <TextView
+                android:id="@+id/pageName"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="14dp"
+                android:text="@string/analytics"
+                android:textColor="@color/blue_10"
+                android:textSize="40sp"
+                android:textStyle="bold" />
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/notification_btn"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="75dp"
+                android:src="@drawable/notification_icon"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/account_btn"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/blue_10"
+                android:src="@drawable/account_icon"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/previous_Img_View"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_below="@id/pageName"
+                android:src="@drawable/left_arrow"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="20dp"/>
+
+            <TextView
+                android:id="@+id/current_Month_Year"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/current_month_year"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="37dp"
+                android:layout_below="@id/pageName"
+                android:layout_toEndOf="@id/previous_Img_View"/>
+
+            <ImageView
+                android:id="@+id/next_Img_View"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/right_arrow"
+                android:layout_marginTop="35dp"
+                android:layout_marginStart="5dp"
+                android:layout_below="@id/account_btn"
+                android:layout_toEndOf="@id/current_Month_Year"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPieGraph"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:elevation="10dp"
+                app:cardCornerRadius="10dp"
+                android:layout_below="@id/previous_Img_View">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/previous_Img_View"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewLineGraph"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:elevation="10dp"
+                app:cardCornerRadius="10dp"
+                android:layout_below="@id/cardViewPieGraph">
+
+                <!-- Add a Horizontal Bar Chart using MPAndroidChart library -->
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/horizontalBarGraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/saveGraphBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_graph"
+                android:layout_below="@id/cardViewLineGraph"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/blue_6"
+                android:padding="18dp"
+                android:elevation="20dp"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
 </FrameLayout>

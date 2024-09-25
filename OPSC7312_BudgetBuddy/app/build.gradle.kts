@@ -59,6 +59,10 @@ dependencies {
     implementation("androidx.compose.foundation:foundation-android:1.7.0")
     implementation(libs.firebase.storage.ktx)
 
+    implementation(libs.mpandroidchart)
+
+    implementation(libs.androidx.cardview)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

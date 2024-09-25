@@ -3,6 +3,7 @@ package com.example.opsc7312_budgetbuddy.activities.models
 import android.util.Log
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +19,7 @@ data class TransactionModel(
 
 //The TransactionCRUD class is responsible for CRUD operations for transactions
 class TransactionCRUD{
+
 
     fun saveTransaction(transactionModel: TransactionModel) {
         val retrofit = Retrofit.Builder()
@@ -43,5 +45,35 @@ class TransactionCRUD{
                 Log.e("TransactionApi", "Error: ${t.message}")
             }
         })
+    }
+
+
+    fun getTransactions(onSuccess: (List<TransactionModel>) -> Unit, onError: (String) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://budgetapp-amber.vercel.app/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = retrofit.create(TransactionApi::class.java)
+
+        if (userId != null) {
+            api.getAllTransactions(userId).enqueue(object : Callback<List<TransactionModel>> {
+                override fun onResponse(call: Call<List<TransactionModel>>, response: Response<List<TransactionModel>>) {
+                    if (response.isSuccessful) {
+                        val recipes = response.body() ?: emptyList()
+                        onSuccess(recipes)
+                    } else {
+                        onError("Error: ${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<List<TransactionModel>>, t: Throwable) {
+                    onError("API Error: ${t.message}")
+                }
+            })
+        }
     }
 }

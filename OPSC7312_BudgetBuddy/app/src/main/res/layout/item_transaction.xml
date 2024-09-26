@@ -10,14 +10,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Bought Coke"
+        android:text="@string/bought_coke"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/transaction_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Food"
+        android:text="@string/food_item_transaction"
         android:textAlignment="textEnd"
         android:textSize="16sp" />
 
@@ -25,7 +25,8 @@
         android:id="@+id/transaction_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="R 3,00"
+        android:text="@string/r_3_00"
         android:textSize="16sp"
         android:textAlignment="textEnd" />
+
 </LinearLayout>

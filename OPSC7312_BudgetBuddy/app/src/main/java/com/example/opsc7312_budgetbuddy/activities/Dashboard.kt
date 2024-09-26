@@ -232,7 +232,12 @@ class Dashboard : AppCompatActivity() {
             val amount: Double = amountText.toDoubleOrNull() ?: 0.0
             val category = categorySpinner.selectedItem.toString()
 
-            val transactionModel = TransactionModel(userId,name, amount, category)
+            // Get current date, month, year
+            val dateFormat = SimpleDateFormat("dd MMMM yyyy") // Changed to include day
+            val calendar = java.util.Calendar.getInstance()
+            val currentDate = dateFormat.format(calendar.time)
+
+            val transactionModel = TransactionModel(userId,name, amount, category, currentDate)
 
             transactionCRUD.saveTransaction(transactionModel)
 

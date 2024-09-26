@@ -1,7 +1,6 @@
 package com.example.opsc7312_budgetbuddy.activities.models
 
 import android.util.Log
-import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
@@ -14,7 +13,8 @@ data class TransactionModel(
     val userId: String = "",
     val transactionName: String= "",
     val transactionAmount: Double= 0.0,
-    val categoryName: String= ""
+    val categoryName: String= "",
+    val transactionDate: String
 )
 
 //The TransactionCRUD class is responsible for CRUD operations for transactions

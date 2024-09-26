@@ -14,6 +14,7 @@ class TransactionAdapter(private val transactions: List<TransactionItem>) :
         val transactionName: TextView = itemView.findViewById(R.id.categoryExpense)
         val transactionAmount: TextView = itemView.findViewById(R.id.displayCost)
         val transactionCategory: TextView = itemView.findViewById(R.id.displayCategory)
+        val transactionDate: TextView = itemView.findViewById(R.id.displayDate)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -25,11 +26,12 @@ class TransactionAdapter(private val transactions: List<TransactionItem>) :
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val transaction = transactions[position]
         holder.transactionName.text = transaction.name
-        holder.transactionAmount.text = "R" + transaction.amount
+        holder.transactionAmount.text = "R${transaction.amount}"
         holder.transactionCategory.text = transaction.category
+        holder.transactionDate.text = transaction.date
     }
 
     override fun getItemCount(): Int = transactions.size
 }
 
-data class TransactionItem(val name: String, val category: String, val amount: String)
+data class TransactionItem(val name: String, val category: String, val amount: String, val date: String)

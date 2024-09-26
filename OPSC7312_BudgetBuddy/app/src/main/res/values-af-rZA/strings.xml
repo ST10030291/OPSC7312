@@ -22,4 +22,14 @@
     <string name="total_budgets_made">Totale begrotings gemaak:</string>
     <string name="change_language_to_afrikaans">Change Language to English</string>
     <string name="budget_history">Begroting Geskiedenis</string>
+
+
+    <string name="budget_for_the_month">Begroot vir die maand</string>
+    <string name="budget_spent_so_far">Begroting tot dusver bestee</string>
+    <string name="budget_available">Begroting beskikbaar</string>
+    <string name="monthly_budget_insight">Maandelikse Begroting Insig</string>
+    <string name="keys">Sleutels</string>
+    <string name="food">Kos</string>
+    <string name="recent_transactions">Onlangse transaksies</string>
+    <string name="save_graph">Stoor grafiek</string>
 </resources>

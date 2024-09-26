@@ -1,7 +1,6 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.content.ContentValues
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,10 +10,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.opsc7312_budgetbuddy.R
 import com.google.firebase.auth.FirebaseAuth
-import java.time.LocalDate
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,13 +45,18 @@ class LogTransactionFragment: Fragment() {
             val amountText = transactionAmount.text.toString()
             val amount: Double = amountText.toDouble()
             val category = categorySpinner.selectedItem.toString()
-            insertTransaction(name, amount, category)
 
+            // Get current date, month, year
+            val dateFormat = SimpleDateFormat("dd MMMM yyyy") // Changed to include day
+            val calendar = Calendar.getInstance()
+            val currentDate = dateFormat.format(calendar.time)
+
+            insertTransaction(name, amount, category, currentDate)
         }
         return view
     }
 
-    fun insertTransaction(name: String, amount: Double, category: String){
+    fun insertTransaction(name: String, amount: Double, category: String, currentDate : String){
         val database = dbHelper.writableDatabase
         val calender = Calendar.getInstance()
         val month = calender.get(Calendar.MONTH).toString()
@@ -64,6 +67,7 @@ class LogTransactionFragment: Fragment() {
             put(DatabaseHelper.TRANSACTION_AMOUNT, amount)
             put(DatabaseHelper.TRANSACTION_CATEGORY, category)
             put(DatabaseHelper.TRANSACTION_MONTH, month)
+            put(DatabaseHelper.TRANSACTION_DATE, currentDate)
             put(DatabaseHelper.USER_ID, userID)
         }
 

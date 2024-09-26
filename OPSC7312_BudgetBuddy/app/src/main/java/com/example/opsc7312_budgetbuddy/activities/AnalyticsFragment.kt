@@ -1,7 +1,6 @@
 package com.example.opsc7312_budgetbuddy.activities
 
-import android.Manifest
-import android.content.pm.PackageManager
+
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
@@ -18,8 +17,6 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
@@ -64,7 +61,6 @@ class AnalyticsFragment : Fragment() {
     private lateinit var previousImgView: ImageView
     private lateinit var nextImgView: ImageView
     private lateinit var saveGraphBtn : Button
-    private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var profileImageView: ShapeableImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,14 +95,18 @@ class AnalyticsFragment : Fragment() {
         previousImgView.setOnClickListener()
         {
             calendar.add(Calendar.MONTH, -1)
-            currentMonthYear.text = dateFormat.format(calendar.time)
+            val date = dateFormat.format(calendar.time)
+            currentMonthYear.text = date
+            fetchTransactions(date)
         }
 
         nextImgView = view.findViewById(R.id.next_Img_View)
         nextImgView.setOnClickListener()
         {
             calendar.add(Calendar.MONTH, 1)
-            currentMonthYear.text = dateFormat.format(calendar.time)
+            val date = dateFormat.format(calendar.time)
+            currentMonthYear.text = date
+            fetchTransactions(date)
         }
 
         // The issue with the highlighted value not disappearing until you click twice
@@ -139,7 +139,7 @@ class AnalyticsFragment : Fragment() {
             saveChartToStorage()
         }
 
-        fetchTransactions()
+        fetchTransactions(dateFormat.format(calendar.time))
     }
 
     override fun onCreateView(
@@ -272,7 +272,7 @@ class AnalyticsFragment : Fragment() {
     }
 
     // Method to fetch the transaction count from the API
-    private fun fetchTransactions() {
+    private fun fetchTransactions(date : String) {
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
 
@@ -284,28 +284,23 @@ class AnalyticsFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     val transactions = response.body() ?: emptyList()
-                    if(transactions.isEmpty()){
-                        Toast.makeText(activity, "No chart data available. Please add transactions first", Toast.LENGTH_SHORT).show()
+                    val dates = date.split(", ")
+                    val monthYear = "${dates[0]} ${dates[1]}"
+                    val filteredTransactions = transactions.filter { it.transactionDate.contains(monthYear) }
+
+                    if(filteredTransactions.isEmpty()){
+                        if(!pieChart.isEmpty){
+                            Toast.makeText(requireContext(), "Cleared graphs", Toast.LENGTH_SHORT).show()
+                            pieChart.clear()
+                            horizontalBarChart.clear()
+                        }
+                    }
+                    else if(filteredTransactions.size == 1){
+                        completeAnalyticsSetup(filteredTransactions)
+                        horizontalBarChart.data.barWidth = 0.3f
                     }
                     else{
-                        val sumsOfTransactions = getTransactionSums(transactions)
-
-                        val pieEntries = ArrayList<PieEntry>()
-                        val barEntries = ArrayList<BarEntry>()
-                        var positionInGraph = 0f
-
-                        for ((key, value) in sumsOfTransactions.entries) {
-                            pieEntries.add(PieEntry(value, key))
-                            barEntries.add(BarEntry(positionInGraph, value))
-                            if (!categoryNames.contains(key)){
-                                categoryNames.add(key)
-                            }
-                            positionInGraph++
-                        }
-                        initialisePieChart()
-                        initialiseHorizontalBarGraph()
-                        setPieChartDataSet(pieEntries)
-                        setHorizontalBarGraphData(barEntries)
+                        completeAnalyticsSetup(filteredTransactions)
                     }
                 }
                 else {
@@ -316,6 +311,27 @@ class AnalyticsFragment : Fragment() {
                 Log.e("API Failure", "Failed to fetch transactions", t)
             }
         })
+    }
+
+    private fun completeAnalyticsSetup(filteredTransactions : List<TransactionModel>){
+        val sumsOfTransactions = getTransactionSums(filteredTransactions)
+
+        val pieEntries = ArrayList<PieEntry>()
+        val barEntries = ArrayList<BarEntry>()
+        var positionInGraph = 0f
+
+        for ((key, value) in sumsOfTransactions.entries) {
+            pieEntries.add(PieEntry(value, key))
+            barEntries.add(BarEntry(positionInGraph, value))
+            if (!categoryNames.contains(key)){
+                categoryNames.add(key)
+            }
+            positionInGraph++
+        }
+        initialisePieChart()
+        initialiseHorizontalBarGraph()
+        setPieChartDataSet(pieEntries)
+        setHorizontalBarGraphData(barEntries)
     }
 
     private fun loadProfileImageFromFirebaseStorage() {

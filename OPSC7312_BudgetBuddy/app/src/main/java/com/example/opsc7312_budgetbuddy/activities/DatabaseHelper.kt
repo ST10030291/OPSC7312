@@ -18,6 +18,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val TRANSACTION_AMOUNT = "transactionAmount"
         const val TRANSACTION_CATEGORY = "transactionCategory"
         const val TRANSACTION_MONTH = "transactionMonth"
+        const val TRANSACTION_DATE = "transactionDate"
         const val USER_ID = "userId"
 
         //Table 2
@@ -51,6 +52,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     "$TRANSACTION_AMOUNT DOUBLE NOT NULL," +
                     "$TRANSACTION_CATEGORY TEXT NOT NULL," +
                     "$TRANSACTION_MONTH TEXT NOT NULL,"+
+                    "$TRANSACTION_DATE TEXT NOT NULL,"+
                     "$USER_ID TEXT NOT NULL)"
         )
 

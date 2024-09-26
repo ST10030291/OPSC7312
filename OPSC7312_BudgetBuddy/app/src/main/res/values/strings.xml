@@ -36,14 +36,21 @@
     <string name="_124_545_00" translatable="false">124 545, 00</string>
     <string name="food">Food</string>
     <string name="recent_transactions">Recent Transactions</string>
-    <string name="category_name">Category Name</string>
-    <string name="amount">Amount</string>
+    <string name="category_name" translatable="false">Category Name</string>
+    <string name="amount" translatable="false">Amount</string>
     <string name="keys">Keys</string>
-    <string name="set_a_budget_via_the_pop_up_button">Set a budget via the pop up button</string>
+    <string name="set_a_budget_via_the_pop_up_button" translatable="false">Set a budget via the pop up button</string>
     <string name="budget_for_the_month">Budget for the month</string>
     <string name="budget_spent_so_far">Budget Spent so far</string>
     <string name="budget_available">Budget Available</string>
     <string name="monthly_budget_insight">Monthly Budget Insight</string>
     <string name="save_graph">Save Graph</string>
-    <string name="current_month_year">current_month_year</string>
+    <string name="current_month_year" translatable="false">current_month_year</string>
+    <string name="r_3_00" translatable="false">R 3,00</string>
+    <string name="bought_coke" translatable="false">Bought Coke</string>
+    <string name="food_item_transaction" translatable="false">Food</string>
+    <string name="kfc_streetwise_2" translatable="false">KFC streetwise 2</string>
+    <string name="r_4000_00" translatable="false">-R 4000.00</string>
+    <string name="food_transaction_item" translatable="false">Food</string>
+    <string name="dateHere" translatable="false">(DateHere)</string>
 </resources>

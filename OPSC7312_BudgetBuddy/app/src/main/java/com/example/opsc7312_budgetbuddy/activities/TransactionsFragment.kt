@@ -6,19 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
-import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
-import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
-import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
-import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -62,7 +56,8 @@ class TransactionsFragment : Fragment() {
                     TransactionItem(
                         name = transactionModel.transactionName,
                         category = transactionModel.categoryName,
-                        amount = transactionModel.transactionAmount.toString()
+                        amount = transactionModel.transactionAmount.toString(),
+                        date = transactionModel.transactionDate
                     )
                 )
             }

@@ -1,8 +1,14 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.os.Bundle
+import android.os.Environment
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
@@ -17,11 +23,15 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
+import com.example.opsc7312_budgetbuddy.activities.models.PercentValueFormatter
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
@@ -47,6 +57,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -60,8 +73,13 @@ class AnalyticsFragment : Fragment() {
     private lateinit var currentMonthYear: TextView
     private lateinit var previousImgView: ImageView
     private lateinit var nextImgView: ImageView
-    private lateinit var saveGraphBtn : Button
+    private lateinit var savePieChart: Button
+    private lateinit var saveBarGraph: Button
     private lateinit var profileImageView: ShapeableImageView
+
+    companion object {
+        var PERMISSION_REQUEST_CODE = 100
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -133,10 +151,31 @@ class AnalyticsFragment : Fragment() {
             }
         })
 
-        saveGraphBtn = view.findViewById(R.id.saveGraphBtn)
-        saveGraphBtn.setOnClickListener()
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE)
+        } else {
+            saveChartToStorage(requireContext(), horizontalBarChart)
+        }
+
+        savePieChart = view.findViewById(R.id.savePieGraphBtn)
+        savePieChart.setOnClickListener()
         {
-            saveChartToStorage()
+            // Setup chart for saving
+            pieChart.data.setValueFormatter(PercentValueFormatter())
+            // Show data
+            pieChart.data.setDrawValues(true)
+            // Show entry labels
+            pieChart.setDrawEntryLabels(true)
+            saveChartToStorage(requireContext(), pieChart)
+        }
+
+        saveBarGraph = view.findViewById(R.id.saveBarGraphBtn)
+        saveBarGraph.setOnClickListener()
+        {
+            saveChartToStorage(requireContext(),horizontalBarChart)
         }
 
         fetchTransactions(dateFormat.format(calendar.time))
@@ -194,7 +233,6 @@ class AnalyticsFragment : Fragment() {
         val data = PieData(dataSet1)
 
         pieChart.data = data
-        //pieChart.data.setValueFormatter(PercentValueFormatter())
         pieChart.data.setDrawValues(false) // Hide data
         pieChart.setDrawEntryLabels(false) // Hide entry labels
 
@@ -390,16 +428,27 @@ class AnalyticsFragment : Fragment() {
         }
     }
 
-    // https://code.tutsplus.com/add-charts-to-your-android-app-using-mpandroidchart--cms-23335t
-    private fun saveChartToStorage(){
+    private fun saveChartToStorage(context: Context, chart: Chart<*>) {
+        // Create a Bitmap from the chart
+        val bitmap = chart.getChartBitmap()
+
+        // Define the file location in the Pictures folder
+        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val file = File(storageDir, "chart_${System.currentTimeMillis()}.png")
+
+        // Write the bitmap to the file
         try {
-            pieChart.saveToGallery("BudgetBuddy_PieChart1.jpg", 100) // 100 is the quality of the image
-            horizontalBarChart.saveToGallery("BudgetBuddy_HorizontalBarChart1.jpg", 100)
-            // https://stackoverflow.com/questions/10770055/use-toast-inside-fragment
-            Toast.makeText(activity, "Graph saved successfully to storage.", Toast.LENGTH_SHORT).show()
-        }
-        catch (e : Exception){
-            Toast.makeText(activity, "Failed to save graph to storage.", Toast.LENGTH_SHORT).show()
+            val out = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+            out.flush()
+            out.close()
+
+            // Notify the media scanner to scan the file
+            MediaScannerConnection.scanFile(context, arrayOf(file.toString()), null, null)
+
+            Toast.makeText(requireContext(), "Chart saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+        } catch (e: IOException) {
+            Toast.makeText(requireContext(), "Failed to save graph to storage.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -425,7 +474,8 @@ class AnalyticsFragment : Fragment() {
         // Detach listeners to avoid memory leaks
         previousImgView.setOnClickListener(null)
         nextImgView.setOnClickListener(null)
-        saveGraphBtn.setOnClickListener(null)
+        savePieChart.setOnClickListener(null)
+        saveBarGraph.setOnClickListener(null)
         // Remove listener
         pieChart.setOnChartValueSelectedListener(null)
 

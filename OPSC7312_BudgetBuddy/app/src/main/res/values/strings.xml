@@ -44,7 +44,6 @@
     <string name="budget_spent_so_far">Budget Spent so far</string>
     <string name="budget_available">Budget Available</string>
     <string name="monthly_budget_insight">Monthly Budget Insight</string>
-    <string name="save_graph">Save Graph</string>
     <string name="current_month_year" translatable="false">current_month_year</string>
     <string name="r_3_00" translatable="false">R 3,00</string>
     <string name="bought_coke" translatable="false">Bought Coke</string>
@@ -53,4 +52,6 @@
     <string name="r_4000_00" translatable="false">-R 4000.00</string>
     <string name="food_transaction_item" translatable="false">Food</string>
     <string name="dateHere" translatable="false">(DateHere)</string>
+    <string name="save_pie_chart">Save Pie Chart</string>
+    <string name="save_bar_graph">Save Bar graph</string>
 </resources>

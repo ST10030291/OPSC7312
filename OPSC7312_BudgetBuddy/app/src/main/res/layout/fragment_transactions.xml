@@ -70,16 +70,16 @@
         <!-- RecyclerView for Recent Transactions -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recentTransactionsRecyclerView"
-            android:layout_width="match_parent"
+            android:layout_width="389dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/recentTransactionsTitle"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginStart="22dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="22dp"
+            android:layout_marginBottom="16dp"
             android:clipToPadding="false"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:scrollbars="vertical" />
 
     </RelativeLayout>

@@ -31,5 +31,7 @@
     <string name="keys">Sleutels</string>
     <string name="food">Kos</string>
     <string name="recent_transactions">Onlangse transaksies</string>
-    <string name="save_graph">Stoor grafiek</string>
+
+    <string name="save_pie_chart">Stoor sirkeldiagram</string>
+    <string name="save_bar_graph">Stoor staafgrafiek</string>
 </resources>

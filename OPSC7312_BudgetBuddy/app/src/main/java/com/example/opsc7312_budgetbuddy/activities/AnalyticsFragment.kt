@@ -20,6 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
@@ -41,7 +42,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,10 +65,12 @@ class AnalyticsFragment : Fragment() {
     private lateinit var nextImgView: ImageView
     private lateinit var saveGraphBtn : Button
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private lateinit var profileImageView: ShapeableImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        profileImageView = view.findViewById(R.id.account_btn)
+        loadProfileImageFromFirebaseStorage()
         view.findViewById<ImageView>(R.id.notification_btn)?.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, NotificationsFragment())
@@ -311,6 +316,21 @@ class AnalyticsFragment : Fragment() {
                 Log.e("API Failure", "Failed to fetch transactions", t)
             }
         })
+    }
+
+    private fun loadProfileImageFromFirebaseStorage() {
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
+
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .placeholder(R.drawable.baseline_account_circle_24)
+                .into(profileImageView)
+        }.addOnFailureListener {
+            Log.e("Firebase Storage", "Error loading image", it)
+        }
     }
 
     private fun getTransactionSums(transactions : List<TransactionModel>): MutableMap<String, Float> {

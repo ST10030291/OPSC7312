@@ -42,7 +42,7 @@
                 android:clickable="true"
                 android:focusable="true"/>
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/account_btn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

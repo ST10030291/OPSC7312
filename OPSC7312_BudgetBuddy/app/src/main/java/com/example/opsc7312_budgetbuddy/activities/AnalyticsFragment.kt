@@ -226,6 +226,7 @@ class AnalyticsFragment : Fragment() {
         xAxis.granularity = 1f
 //        xAxis.setCenterAxisLabels(true)
         xAxis.yOffset = 20f
+        xAxis.xOffset = 8f
 
         val yLeft = horizontalBarChart.axisLeft
 
@@ -290,7 +291,6 @@ class AnalyticsFragment : Fragment() {
 
                     if(filteredTransactions.isEmpty()){
                         if(!pieChart.isEmpty){
-                            Toast.makeText(requireContext(), "Cleared graphs", Toast.LENGTH_SHORT).show()
                             pieChart.clear()
                             horizontalBarChart.clear()
                         }
@@ -332,21 +332,6 @@ class AnalyticsFragment : Fragment() {
         initialiseHorizontalBarGraph()
         setPieChartDataSet(pieEntries)
         setHorizontalBarGraphData(barEntries)
-    }
-
-    private fun loadProfileImageFromFirebaseStorage() {
-
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
-
-        storageRef.downloadUrl.addOnSuccessListener { uri ->
-            Glide.with(this)
-                .load(uri)
-                .placeholder(R.drawable.baseline_account_circle_24)
-                .into(profileImageView)
-        }.addOnFailureListener {
-            Log.e("Firebase Storage", "Error loading image", it)
-        }
     }
 
     private fun getTransactionSums(transactions : List<TransactionModel>): MutableMap<String, Float> {
@@ -415,6 +400,21 @@ class AnalyticsFragment : Fragment() {
         }
         catch (e : Exception){
             Toast.makeText(activity, "Failed to save graph to storage.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadProfileImageFromFirebaseStorage() {
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
+
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .placeholder(R.drawable.baseline_account_circle_24)
+                .into(profileImageView)
+        }.addOnFailureListener {
+            Log.e("Firebase Storage", "Error loading image", it)
         }
     }
 

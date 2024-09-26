@@ -33,11 +33,11 @@ class TransactionsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var TransactionItems: MutableList<TransactionItem>
     private lateinit var TransactionAdapter: TransactionAdapter
-    private lateinit var profileImageView: ShapeableImageView
+    //private lateinit var profileImageView: ShapeableImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        profileImageView = view.findViewById(R.id.account_btn)
+        //profileImageView = view.findViewById(R.id.account_btn)
         recyclerView = view.findViewById(R.id.recentTransactionsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
@@ -45,7 +45,7 @@ class TransactionsFragment : Fragment() {
         TransactionItems = mutableListOf()
         TransactionAdapter = TransactionAdapter(TransactionItems)
         recyclerView.adapter = TransactionAdapter
-        loadProfileImageFromFirebaseStorage()
+        //loadProfileImageFromFirebaseStorage()
         fetchTransactions()
     }
 
@@ -74,7 +74,7 @@ class TransactionsFragment : Fragment() {
             Log.e("API Error", errorMessage)
         })
     }
-    private fun loadProfileImageFromFirebaseStorage() {
+    /*private fun loadProfileImageFromFirebaseStorage() {
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")
@@ -87,7 +87,7 @@ class TransactionsFragment : Fragment() {
         }.addOnFailureListener {
             Log.e("Firebase Storage", "Error loading image", it)
         }
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

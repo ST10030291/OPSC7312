@@ -18,16 +18,13 @@
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPopupTray"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginStart="176dp"
-        android:importantForAccessibility="no"
-        app:shapeAppearanceOverlay="@style/fab_3_rounded"
+        android:layout_alignTop="@id/bottom_navigation"
+        android:layout_marginTop="-30dp"
         android:backgroundTint="@color/white"
-        app:layout_anchor="@id/bottom_navigation"
+        app:shapeAppearanceOverlay="@style/fab_3_rounded"
         app:maxImageSize="40dp"
         android:src="@drawable/plus" />
 
@@ -41,4 +38,5 @@
         app:itemIconTint="@drawable/bottom_nav_item_color"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_nav_bar" />
+
 </RelativeLayout>

@@ -125,6 +125,7 @@ class AccountFragment : Fragment() {
         totalBudgetAmountTextView = view.findViewById(R.id.tv_total_budgeted)
     }
 
+    //Sets up the database to reference the Profile images folder
     private fun databaseSetup()
     {
         storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages")
@@ -132,6 +133,7 @@ class AccountFragment : Fragment() {
         databaseRef = Firebase.database.reference.child("Users").child(auth.currentUser?.uid!!)
     }
 
+    //This loads all the users budgets in a list for later use
     private fun loadBudgets() {
         BudgetCRUD.getBudgets(
             onSuccess = { recipes ->
@@ -166,6 +168,8 @@ class AccountFragment : Fragment() {
             .commit()
     }
 
+    //This will get All the budgets and display the total budgeted
+    //as well as the total budgets made by the user
     private fun fetchTotalBudget() {
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -197,6 +201,7 @@ class AccountFragment : Fragment() {
         })
     }
 
+    //This will Save the new image and call the uploadImageToFirebase() to save to the database
     private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             imageUri = it
@@ -205,6 +210,7 @@ class AccountFragment : Fragment() {
         }
     }
 
+    //This will simply add the new image to the database and respond with the appropriate message
     private fun saveImageUriToDatabase(uri: Uri)
     {
         databaseRef.child("profileImageUri").setValue(uri.toString())
@@ -215,7 +221,7 @@ class AccountFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to save image URI", Toast.LENGTH_SHORT).show()
             }
     }
-
+    //This will simply add the new image to the database and respond with the appropriate message
     private fun uploadImageToFirebase() {
         imageUri?.let {
             val userId = auth.currentUser?.uid ?: return
@@ -232,6 +238,7 @@ class AccountFragment : Fragment() {
         }
     }
 
+    //This will load the user profile image from firebase storage using Glide library
     private fun loadProfileImageFromFirebaseStorage() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val storageRef = FirebaseStorage.getInstance().reference.child("ProfileImages/$userId.jpg")

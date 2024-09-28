@@ -9,6 +9,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+//Model for Budget
 data class BudgetModel(
     var id: String?,
     val userId: String = "",
@@ -41,6 +42,7 @@ class budgetCRUD{
 
     val api = retrofit.create(BudgetApi::class.java)
 
+    //This gets all budgets by user Id and returns it as a list
     fun getBudgets(onSuccess: (List<BudgetModel>) -> Unit, onError: (String) -> Unit) {
         if (userId != null) {
             api.getBudgetsByUserId(userId).enqueue(object : Callback<List<BudgetModel>> {

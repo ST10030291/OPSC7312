@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const path = require('path');
 
-//environment variables from vercel will be initialised here
+//Environment variables from vercel will be initialised here
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,

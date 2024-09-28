@@ -20,7 +20,6 @@ data class TransactionModel(
 //The TransactionCRUD class is responsible for CRUD operations for transactions
 class TransactionCRUD{
 
-
     fun saveTransaction(transactionModel: TransactionModel) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")

@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         progressBar()
     }
 
+    //Simple progress bar to simulate 10 seconds loading
     private fun progressBar(){
         pb = findViewById(R.id.progressBar)
 
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity() {
                 if(counter == 100){
                     t.cancel()
 
-                    val intent = Intent(this@MainActivity, Dashboard::class.java)
+                    //Redirects to the Login Activity after progress counter reaches 100
+                    val intent = Intent(this@MainActivity, LoginActivity::class.java)
                     startActivity(intent)
                 }
             }

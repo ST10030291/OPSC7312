@@ -103,6 +103,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"/>
 
+            <!-- Total budgeted -->
                 <TextView
                     android:id="@+id/tv_total_budgeted"
                     android:layout_width="match_parent"
@@ -228,9 +229,6 @@
             />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
     </RelativeLayout>
 </FrameLayout>

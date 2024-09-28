@@ -3,6 +3,7 @@ const router = express.Router();
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
+//This is used to get all the budgets that match the userId that is currently logged in
 router.get('/', async (req, res) => {
   const userId = req.query.userId;
   try {
@@ -10,6 +11,8 @@ router.get('/', async (req, res) => {
       return res.status(400).json({ error: 'User ID is required' });
     }
     const snapshot = await db.collection('budgets').where('userId', '==', userId).get();
+
+    //If there are no budgets then a message will be logged
     if (snapshot.empty) {
       return res.status(404).json({ error: 'No budgets found for this user' });
     }

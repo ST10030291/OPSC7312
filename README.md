@@ -19,6 +19,9 @@ Clone this repository to your local machine using git clone <repository_url>.
 Open the project in Android Studio.
 Build and run the app on your Android device or emulator.
 
+## Device requirements
+Users will need an android device running an android version between Android 7 (Android API Level 24), codename "Nougat" amd Android 12L (Android API Level 32), codename "Snow Cone". 
+
 ## How to use our App
 When you open the app you will be required to either Sign Up for a new account or Log In. 
 You are also able to login with google SSO via your google account.

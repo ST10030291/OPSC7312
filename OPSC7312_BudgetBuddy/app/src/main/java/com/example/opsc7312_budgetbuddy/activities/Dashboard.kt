@@ -160,47 +160,54 @@ class Dashboard : AppCompatActivity() {
 
 
         saveButton.setOnClickListener {
-            val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
+            val total = totalBudgetInput.text.toString()
 
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://budgetapp-amber.vercel.app/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+            if(total.isEmpty()){
+                Toast.makeText(this, "Invalid, enter an amount.", Toast.LENGTH_SHORT).show()
+            }else{
+                val totalBudget = totalBudgetInput.text.toString().toDoubleOrNull() ?:0.0
 
-            val api = retrofit.create(BudgetApi::class.java)
+                val retrofit = Retrofit.Builder()
+                    .baseUrl("https://budgetapp-amber.vercel.app/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
 
-            val budgetModel = BudgetModel(id = null,userId, month ,totalBudget, expenseList)
+                val api = retrofit.create(BudgetApi::class.java)
 
-            api.addBudget(budgetModel).enqueue(object : Callback<BudgetResponse> {
-                override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {
-                    if (response.isSuccessful) {
-                        val budgetID = response.body()?.id
-                        if (budgetID != null) {
-                            budgetModel.id = budgetID
-                            budgetList.add(budgetModel)
+                val budgetModel = BudgetModel(id = null,userId, month ,totalBudget, expenseList)
 
-                            Log.d("BudgetApi", "Budget added successfully")
+                api.addBudget(budgetModel).enqueue(object : Callback<BudgetResponse> {
+                    override fun onResponse(call: Call<BudgetResponse>, response: Response<BudgetResponse>) {
+                        if (response.isSuccessful) {
+                            val budgetID = response.body()?.id
+                            if (budgetID != null) {
+                                budgetModel.id = budgetID
+                                budgetList.add(budgetModel)
+
+                                Log.d("BudgetApi", "Budget added successfully")
+                            } else {
+                                Log.e("BudgetApi", "No ID received from the server")
+                            }
                         } else {
-                            Log.e("BudgetApi", "No ID received from the server")
+                            Log.e("BudgetApi", "Error: ${response.code()} - ${response.message()}")
                         }
-                    } else {
-                        Log.e("BudgetApi", "Error: ${response.code()} - ${response.message()}")
                     }
-                }
 
-                override fun onFailure(call: Call<BudgetResponse>, t: Throwable) {
-                    Log.e("BudgetApi", "Failed to add budget", t)
-                }
-            })
+                    override fun onFailure(call: Call<BudgetResponse>, t: Throwable) {
+                        Log.e("BudgetApi", "Failed to add budget", t)
+                    }
+                })
 
-            // Reload the page for the budget to reflect the new budget
-            val intent = Intent(this, javaClass)
-            finish()
-            startActivity(intent)
-            dialog.dismiss()
+                // Reload the page for the budget to reflect the new budget
+                val intent = Intent(this, javaClass)
+                finish()
+                startActivity(intent)
+                dialog.dismiss()
 
-            Toast.makeText(this, "Budget added successfully", Toast.LENGTH_SHORT).show()
-        }
+                Toast.makeText(this, "Budget added successfully", Toast.LENGTH_SHORT).show()
+
+            }
+                    }
 
         cancelButton.setOnClickListener { dialog.dismiss() }
         dialog.show()
@@ -237,17 +244,23 @@ class Dashboard : AppCompatActivity() {
             val calendar = java.util.Calendar.getInstance()
             val currentDate = dateFormat.format(calendar.time)
 
-            val transactionModel = TransactionModel(userId,name, amount, category, currentDate)
+            if(name.isEmpty() || amountText.isEmpty() || category.isEmpty()){
+                Toast.makeText(this, "Invalid, Please enter the respected fields.", Toast.LENGTH_SHORT).show()
+            }else{
+                val transactionModel = TransactionModel(userId,name, amount, category, currentDate)
 
-            transactionCRUD.saveTransaction(transactionModel)
+                transactionCRUD.saveTransaction(transactionModel)
 
-            // Reload the page for transaction count to reflect the new transaction
-            val intent = Intent(this, javaClass)
-            finish()
-            startActivity(intent)
-            dialog.dismiss()
+                // Reload the page for transaction count to reflect the new transaction
+                val intent = Intent(this, javaClass)
+                finish()
+                startActivity(intent)
+                dialog.dismiss()
 
-            Toast.makeText(this, "Transaction added successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Transaction added successfully", Toast.LENGTH_SHORT).show()
+            }
+
+
         }
 
         cancelButton.setOnClickListener { dialog.dismiss() }

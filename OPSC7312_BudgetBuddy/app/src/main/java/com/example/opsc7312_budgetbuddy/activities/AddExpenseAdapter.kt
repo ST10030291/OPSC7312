@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.models.Category
@@ -38,12 +39,12 @@ class AddExpenseAdapter(private val expenseList: MutableList<Category>) :
 
 
 
-
         if (expense.amount > 0) {
             holder.enterAmount.setText(expense.amount.toString())
         } else {
             holder.enterAmount.text.clear()
         }
+
 
 
         holder.categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -54,6 +55,8 @@ class AddExpenseAdapter(private val expenseList: MutableList<Category>) :
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
+
+
         }
 
         holder.enterAmount.addTextChangedListener(object : TextWatcher {

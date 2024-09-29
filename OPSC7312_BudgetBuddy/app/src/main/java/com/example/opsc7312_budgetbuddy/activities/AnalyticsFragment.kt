@@ -483,26 +483,33 @@ class AnalyticsFragment : Fragment() {
     // Posted by: Ulrich Scheller
     // Available at: https://stackoverflow.com/questions/649154/save-bitmap-to-location
     private fun saveChartToStorage(context: Context, chart: Chart<*>) {
-        // Create a Bitmap from the chart
-        val bitmap = chart.getChartBitmap()
+        if(chart.isEmpty){
+            Log.i("EMPTY005", "Chart not saved, chart empty!")
+            Toast.makeText(requireContext(), "Could not save chart to storage. Chart is empty.",
+                Toast.LENGTH_SHORT).show()
+        }
+        else{
+            // Create a Bitmap from the chart
+            val bitmap = chart.getChartBitmap()
 
-        // Define the file location in the Pictures folder
-        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val file = File(storageDir, "chart_${System.currentTimeMillis()}.png")
+            // Define the file location in the Pictures folder
+            val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            val file = File(storageDir, "chart_${System.currentTimeMillis()}.png")
 
-        // Write the bitmap to the file
-        try {
-            val out = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-            out.flush()
-            out.close()
+            // Write the bitmap to the file
+            try {
+                val out = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                out.flush()
+                out.close()
 
-            // Notify the media scanner to scan the file
-            MediaScannerConnection.scanFile(context, arrayOf(file.toString()), null, null)
+                // Notify the media scanner to scan the file
+                MediaScannerConnection.scanFile(context, arrayOf(file.toString()), null, null)
 
-            Toast.makeText(requireContext(), "Chart saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
-        } catch (e: IOException) {
-            Toast.makeText(requireContext(), "Failed to save graph to storage.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Chart saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            } catch (e: IOException) {
+                Toast.makeText(requireContext(), "Failed to save graph to storage.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -83,4 +83,20 @@ Titled: RecyclerView With Item Click Listener in Kotlin : ( Android Tutorial 202
 Available at: https://youtu.be/WqrpcWXBz14?si=M__gSJpM5G1RHZmT
 Accessed: 10 September 2024
 
+5.
+Attribution: "Fragments in Android - A Guide for Beginners"
+Link: https://developer.android.com/guide/fragments
+
+6.
+Attribution: "ViewBinding with Fragments - Medium Article"
+Link: https://medium.com/some-view-binding-article
+
+7.
+Attribution: "Mastering Android Fragments with Kotlin - Ray Wenderlich"
+Link: https://www.raywenderlich.com/kotlin-fragment-tutorial
+
+8.
+Attribution: "RecyclerView inside Fragments - Udacity Android Developer Course"
+Link: https://www.udacity.com/course/android-developer-nanodegree--nd801
+
  */

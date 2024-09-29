@@ -37,9 +37,10 @@ the total budget and add categories as needed with the amount allocation and cli
 name of the transaction, the amount and the category which it falls under. This will also then populate the monthly budget insight.
 
 ### Transactions Page
-This page displays the total amount of money you've spent on a specific category in the form of percentage values inside two different graphs (a Pie Chart and a horizontal bar graph). The percentage values are calculated based on your total spending amount. Users also have the ability to save the Pie Chart and horizontal bar graph displayed on the screen to their devices storage for viewing at a later stage. Lastly, users can filter the chart and graph data by monthly dates.
+This is where you can view a full list of all recorded transaction in detail with its name, amount, date and category.
 
 ### Statistics Page
+This page displays the total amount of money you've spent on a specific category in the form of percentage values inside two different graphs (a Pie Chart and a horizontal bar graph). The percentage values are calculated based on your total spending amount. Users also have the ability to save the Pie Chart and horizontal bar graph displayed on the screen to their devices storage for viewing at a later stage. Lastly, users can filter the chart and graph data by monthly dates.
 
 ### Profile Page
 On this page you are able to view information about your account as well as change any settings related to your account. 

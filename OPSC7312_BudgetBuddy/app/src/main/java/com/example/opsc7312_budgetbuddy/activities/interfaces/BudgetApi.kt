@@ -11,6 +11,12 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+// The code for this interface was taken from a geeksforgeeks blog
+// Titled: How to GET Data From API using Retrofit Library in Android?
+// Written by: Chinmaya121221
+// Available at: https://www.geeksforgeeks.org/how-to-get-data-from-api-using-retrofit-library-in-android/
+// Accessed 15 September 2024
+
 
 //Actions for API POST AND GET for budgets
 interface BudgetApi {

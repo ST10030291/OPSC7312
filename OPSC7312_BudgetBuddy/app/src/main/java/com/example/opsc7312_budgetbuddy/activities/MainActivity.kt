@@ -53,3 +53,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 }
+
+/*Code Attribution:
+1.
+This code was taken from a YouTube Video
+Upload by: Fox Android
+Titled: RecyclerView using Kotlin 2021 || Android RecyclerView in Kotlin || Kotlin RecyclerView Example
+Available at: https://youtu.be/UbP8E6I91NA?si=h8eoep-KrGFlteNe
+Accessed: 07 September 2024
+
+2.
+This code was taken from a YouTube Video
+Upload by: Android Knowledge
+Titled: RecyclerView in Android Studio using Kotlin | Source Code | 2024
+Available at: https://youtu.be/IYhmpUmeGOQ?si=x7r4X4gGaezJtrgf
+Accessed: 10 September 2024
+
+3.
+This code was taken from a YouTube Video
+Upload by: EDMT Dev
+Titled: Android Development Tutorial - Swipe to show button Recycler View
+Available at: https://youtu.be/Cam2AvfJilY?si=M_MBB1K0WDt8EGU4
+Accessed: 05 September 2024
+
+4.
+This code was taken from a YouTube Video
+Upload by: CodingSTUFF
+Titled: RecyclerView With Item Click Listener in Kotlin : ( Android Tutorial 2022 )
+Available at: https://youtu.be/WqrpcWXBz14?si=M__gSJpM5G1RHZmT
+Accessed: 10 September 2024
+
+ */

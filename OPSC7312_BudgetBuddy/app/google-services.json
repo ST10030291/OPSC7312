@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "548207325701-7rn9ardl3uri2g37h4pbfk9btbm6618l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.opsc7312_budgetbuddy",
+            "certificate_hash": "8349148a86eda24f83683c36a440aa316fbd44b7"
+          }
+        },
+        {
           "client_id": "548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com",
           "client_type": 3
         }

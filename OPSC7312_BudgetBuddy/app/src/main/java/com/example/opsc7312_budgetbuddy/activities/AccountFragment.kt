@@ -6,12 +6,14 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -26,7 +28,11 @@ import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.adapters.BudgetHistoryAdapter
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
+import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
+import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
+import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
+import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +46,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileWriter
 import java.util.Locale
 
 class AccountFragment : Fragment() {
@@ -60,6 +68,9 @@ class AccountFragment : Fragment() {
     private lateinit var  storageRef: StorageReference
     private lateinit var databaseRef: DatabaseReference
 
+    private var transactionList: MutableList<TransactionItem> = mutableListOf()
+    private var budgetnList: MutableList<BudgetModel> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,6 +86,7 @@ class AccountFragment : Fragment() {
         val savedLanguage = sharedPreferences.getString(LANGUAGE_KEY, "en")
         val languageSwitch = view.findViewById<SwitchCompat>(R.id.languageSwitch)
         val changeProfilePicBtn = view.findViewById<ImageView>(R.id.change_profile_icon)
+        val exportButton = view.findViewById<Button>(R.id.exportBtn)
         val user = FirebaseAuth.getInstance().currentUser
         val userId = user?.uid ?: return
         val userEmail = user.email
@@ -115,6 +127,10 @@ class AccountFragment : Fragment() {
             selectImageLauncher.launch("image/*")
         }
 
+        exportButton.setOnClickListener {
+            exportData()
+        }
+
         budgetAdapter = BudgetHistoryAdapter(budgetList, requireContext())
         val budgetRecycler = view.findViewById<RecyclerView>(R.id.BudgetHistoryListView)
         budgetRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -123,6 +139,70 @@ class AccountFragment : Fragment() {
         fetchTotalBudget()
         totalBudgetsTextView = view.findViewById(R.id.tv_total_budgets)
         totalBudgetAmountTextView = view.findViewById(R.id.tv_total_budgeted)
+    }
+
+    private fun importBudget(){
+        val budgetCRUD = budgetCRUD()
+        BudgetCRUD.getBudgets(
+            onSuccess = { recipes ->
+                budgetnList.clear()
+                budgetnList.addAll(recipes)
+            },
+            onError = {
+
+            }
+        )
+    }
+    private fun importTransactions(){
+        val transactionCRUD = TransactionCRUD()
+
+        transactionCRUD.getTransactions(onSuccess = { transactionModels ->
+            for (transactionModel in transactionModels) {
+                transactionList.add(
+                    TransactionItem(
+                        name = transactionModel.transactionName,
+                        category = transactionModel.categoryName,
+                        amount = transactionModel.transactionAmount.toString(),
+                        date = transactionModel.transactionDate
+                    )
+                )
+            }
+
+        }, onError = { errorMessage ->
+            Log.e("API Error", errorMessage)
+        })
+    }
+
+
+    private fun exportData(){
+        importBudget()
+        importTransactions()
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        } else {
+            val filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/data.csv"
+            val file = File(filePath)
+
+            val fileWriter = FileWriter(file)
+
+            for(budget in budgetnList){
+                fileWriter.append(budget.categories.toString())
+                fileWriter.append(budget.totalBudget.toString())
+
+            }
+
+            for(transaction in transactionList){
+                fileWriter.append(transaction.category)
+                fileWriter.append(transaction.amount)
+            }
+
+            fileWriter.flush()
+            fileWriter.close()
+
+            Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     //Sets up the database to reference the Profile images folder

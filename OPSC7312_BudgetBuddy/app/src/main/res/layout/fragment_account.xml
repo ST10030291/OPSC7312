@@ -176,6 +176,9 @@
                 android:id="@+id/BudgetHistoryListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+
+
         </LinearLayout>
 
         <TextView
@@ -229,6 +232,18 @@
             />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/exportBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/blue"
+            android:text="Export to CSV"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </FrameLayout>

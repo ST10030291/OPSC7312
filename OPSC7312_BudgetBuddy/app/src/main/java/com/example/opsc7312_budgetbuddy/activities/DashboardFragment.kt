@@ -3,14 +3,20 @@ package com.example.opsc7312_budgetbuddy.activities
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,6 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.concurrent.Executor
 
 class DashboardFragment : Fragment() {
 
@@ -48,6 +55,8 @@ class DashboardFragment : Fragment() {
     private lateinit var transactionApiService: TransactionApi
     private lateinit var circularProgressBarBudget: CircularProgressBar
     private lateinit var circularProgressBarSpent: CircularProgressBar
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,6 +109,8 @@ class DashboardFragment : Fragment() {
         fetchRemainingBudget()
         fetchBudgets()
         updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
+
+
     }
 
     // Method to fetch Category Name and Amount from the API for Budget Breakdown

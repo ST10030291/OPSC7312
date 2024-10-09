@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.opsc7312_budgetbuddy"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +57,8 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.google.firebase:firebase-firestore-ktx:25.1.0")
     implementation("androidx.compose.foundation:foundation-android:1.7.0")
+    implementation("androidx.biometric:biometric:1.2.0-alpha04")
+    implementation("androidx.biometric:biometric:1.1.0")
     implementation(libs.firebase.storage.ktx)
 
     implementation(libs.mpandroidchart)

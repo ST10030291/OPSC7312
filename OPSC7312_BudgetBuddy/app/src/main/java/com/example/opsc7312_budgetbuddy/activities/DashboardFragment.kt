@@ -130,7 +130,7 @@ class DashboardFragment : Fragment() {
         //biometrics()
 
     }
-    private fun biometrics(){
+    /*private fun biometrics(){
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = androidx.biometric.BiometricPrompt(requireActivity(), executor,
             object : AuthenticationCallback() {
@@ -182,7 +182,7 @@ class DashboardFragment : Fragment() {
                 biometricPrompt.authenticate(promptInfo)
             }
         }
-    }
+    }*/
 
     // Method to fetch Category Name and Amount from the API for Budget Breakdown
     private fun fetchBudgets() {

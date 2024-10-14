@@ -1,8 +1,10 @@
 package com.example.opsc7312_budgetbuddy.activities
 
+import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
 import android.os.CancellationSignal
@@ -15,12 +17,16 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.biometric.BiometricPrompt.AuthenticationCallback
+import androidx.biometric.BiometricPrompt.PromptInfo
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
+import com.example.opsc7312_budgetbuddy.activities.TransactionsFragment.Companion
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
@@ -57,6 +63,14 @@ class DashboardFragment : Fragment() {
     private lateinit var circularProgressBarSpent: CircularProgressBar
 
 
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: androidx.biometric.BiometricPrompt
+    private lateinit var promptInfo: PromptInfo
+    private lateinit var authenticationButton: Button
+
+    companion object {
+        var PERMISSION_REQUEST_CODE = 100
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,11 +85,15 @@ class DashboardFragment : Fragment() {
         val userId = user?.uid ?: return
         profileImageView = view.findViewById(R.id.account_btn)
         loadProfileImageFromFirebaseStorage()
+
+
+
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
 
         // Initialize Circular Progress Bars
         circularProgressBarBudget = view.findViewById(R.id.circularProgressBarBudget)
@@ -109,8 +127,61 @@ class DashboardFragment : Fragment() {
         fetchRemainingBudget()
         fetchBudgets()
         updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
+        //biometrics()
 
+    }
+    private fun biometrics(){
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt = androidx.biometric.BiometricPrompt(requireActivity(), executor,
+            object : AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(
+                        requireContext(),
+                        "Authentication error: $errString",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
 
+                override fun onAuthenticationSucceeded(
+                    result: androidx.biometric.BiometricPrompt.AuthenticationResult
+                ) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(
+                        requireContext(),
+                        "Authentication succeeded!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+
+        promptInfo = PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use account password")
+            .build()
+
+        authenticationButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.USE_BIOMETRIC)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(),
+                    arrayOf(Manifest.permission.USE_BIOMETRIC),
+                    TransactionsFragment.PERMISSION_REQUEST_CODE
+                )
+            }
+            else{
+                biometricPrompt.authenticate(promptInfo)
+            }
+        }
     }
 
     // Method to fetch Category Name and Amount from the API for Budget Breakdown

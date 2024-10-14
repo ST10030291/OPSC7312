@@ -1,6 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.CommonDataKinds.Im
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,6 +29,7 @@ import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.adapters.BudgetHistoryAdapter
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
+import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
@@ -48,7 +51,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileWriter
+import java.io.OutputStreamWriter
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class AccountFragment : Fragment() {
 
@@ -56,6 +61,7 @@ class AccountFragment : Fragment() {
     private val PREFS_NAME = "UserPrefs"
     private val LANGUAGE_KEY = "language_key"
     private lateinit var budgetApiService: BudgetApi
+    private lateinit var transactionApiService: TransactionApi
     private lateinit var retrofit: Retrofit
     private lateinit var totalBudgetsTextView: TextView
     private lateinit var totalBudgetAmountTextView: TextView
@@ -67,6 +73,7 @@ class AccountFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var  storageRef: StorageReference
     private lateinit var databaseRef: DatabaseReference
+
 
     private var transactionList: MutableList<TransactionItem> = mutableListOf()
     private var budgetnList: MutableList<BudgetModel> = mutableListOf()
@@ -100,6 +107,7 @@ class AccountFragment : Fragment() {
 
         BudgetCRUD = budgetCRUD()
         budgetApiService = retrofit.create(BudgetApi::class.java)
+        transactionApiService = retrofit.create(TransactionApi::class.java)
 
         view.findViewById<TextView>(R.id.tv_name).text = userName
         view.findViewById<TextView>(R.id.tv_email).text = "$userEmail"
@@ -127,9 +135,7 @@ class AccountFragment : Fragment() {
             selectImageLauncher.launch("image/*")
         }
 
-        exportButton.setOnClickListener {
-            exportData()
-        }
+
 
         budgetAdapter = BudgetHistoryAdapter(budgetList, requireContext())
         val budgetRecycler = view.findViewById<RecyclerView>(R.id.BudgetHistoryListView)
@@ -137,8 +143,14 @@ class AccountFragment : Fragment() {
         budgetRecycler.adapter = budgetAdapter
         loadBudgets()
         fetchTotalBudget()
+        importBudget()
+        importTransactions()
         totalBudgetsTextView = view.findViewById(R.id.tv_total_budgets)
         totalBudgetAmountTextView = view.findViewById(R.id.tv_total_budgeted)
+
+        exportButton.setOnClickListener {
+            exportData()
+        }
     }
 
     private fun importBudget(){
@@ -175,32 +187,52 @@ class AccountFragment : Fragment() {
 
 
     private fun exportData(){
-        importBudget()
-        importTransactions()
+        var isExported = false
+
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         } else {
-            val filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/data.csv"
-            val file = File(filePath)
-
-            val fileWriter = FileWriter(file)
-
-            for(budget in budgetnList){
-                fileWriter.append(budget.categories.toString())
-                fileWriter.append(budget.totalBudget.toString())
-
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, "Budget_Buddy_Report.csv")
+                put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             }
 
-            for(transaction in transactionList){
-                fileWriter.append(transaction.category)
-                fileWriter.append(transaction.amount)
+            val resolver = requireContext().contentResolver
+            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+            uri?.let{
+                val outputStream = resolver.openOutputStream(it)
+                val fileWriter = OutputStreamWriter(outputStream)
+
+                for(budget in budgetnList){
+                    fileWriter.append(budget.categories.toString())
+                    fileWriter.append(budget.totalBudget.toString())
+                    isExported = true
+
+                }
+
+                for(transaction in transactionList){
+                    fileWriter.append(transaction.category)
+                    fileWriter.append(transaction.amount)
+                    isExported = true
+                }
+
+                fileWriter.flush()
+                fileWriter.close()
             }
 
-            fileWriter.flush()
-            fileWriter.close()
+            if(isExported){
+                for(budget in budgetnList){
+                    Toast.makeText(requireContext(), "CSV file saved successfully!" + budget.totalBudget.toString() , Toast.LENGTH_LONG).show()
+                }
+                //Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
+            }
+            else{
+                Toast.makeText(requireContext(), "CSV file was unsuccessful!", Toast.LENGTH_LONG).show()
+            }
 
-            Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
         }
 
     }

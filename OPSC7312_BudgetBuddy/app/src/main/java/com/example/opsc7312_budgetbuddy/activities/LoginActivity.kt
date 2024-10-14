@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                           biometrics()
+                            checkPermission()
                             val intent = Intent(this, Dashboard::class.java)
                             startActivity(intent)
                             finish()
@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Google Sign-In Successful", Toast.LENGTH_SHORT).show()
-                    biometrics()
+                    checkPermission()
                     val intent = Intent(this, Dashboard::class.java)
                     startActivity(intent)
                     finish()
@@ -120,6 +120,18 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Google Sign-In Failed: ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+    private fun checkPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_BIOMETRIC)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.USE_BIOMETRIC),
+                TransactionsFragment.PERMISSION_REQUEST_CODE
+            )
+        }
+        else{
+            biometrics()
+        }
     }
     private fun biometrics(){
         executor = ContextCompat.getMainExecutor(this@LoginActivity)
@@ -155,23 +167,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
 
-        promptInfo = androidx.biometric.BiometricPrompt.PromptInfo.Builder()
+        promptInfo = PromptInfo.Builder()
             .setTitle("Biometric login for my app")
             .setSubtitle("Log in using your biometric credential")
             .setNegativeButtonText("Use account password")
             .build()
 
-        authenticationButton.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_BIOMETRIC)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.USE_BIOMETRIC),
-                    TransactionsFragment.PERMISSION_REQUEST_CODE
-                )
-            }
-            else{
-                biometricPrompt.authenticate(promptInfo)
-            }
-        }
+        biometricPrompt.authenticate(promptInfo)
     }
 }

@@ -174,9 +174,10 @@ class LoginActivity : AppCompatActivity() {
             })
 
         promptInfo = PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
+            .setTitle("Biometric Login")
             .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
+            .setNegativeButtonText("Use Password/Pattern")
+            .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
             .build()
 
         biometricPrompt.authenticate(promptInfo)

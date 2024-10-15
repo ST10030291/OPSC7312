@@ -36,11 +36,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: androidx.biometric.BiometricPrompt
     private lateinit var promptInfo: PromptInfo
-    private lateinit var authenticationButton: Button
-
-    companion object {
-        var PERMISSION_REQUEST_CODE = 100
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +44,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
-
-        val currentUser = firebaseAuth.currentUser
-
 
         // Configure Google Sign-In
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -76,8 +68,8 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                             checkPermission()
+                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, Dashboard::class.java)
                             startActivity(intent)
                             finish()
@@ -112,8 +104,8 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Google Sign-In Successful", Toast.LENGTH_SHORT).show()
                     checkPermission()
+                    Toast.makeText(this, "Google Sign-In Successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, Dashboard::class.java)
                     startActivity(intent)
                     finish()
@@ -176,10 +168,8 @@ class LoginActivity : AppCompatActivity() {
         promptInfo = PromptInfo.Builder()
             .setTitle("Biometric Login")
             .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Use Password/Pattern")
             .build()
-
-        //            .setNegativeButtonText("Use Password/Pattern")
-        //            .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
 
         biometricPrompt.authenticate(promptInfo)
     }

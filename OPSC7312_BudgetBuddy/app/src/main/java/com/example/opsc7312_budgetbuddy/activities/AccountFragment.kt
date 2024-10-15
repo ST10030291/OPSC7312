@@ -155,7 +155,7 @@ class AccountFragment : Fragment() {
 
     private fun importBudget(){
         val budgetCRUD = budgetCRUD()
-        BudgetCRUD.getBudgets(
+        budgetCRUD.getBudgets(
             onSuccess = { recipes ->
                 budgetnList.clear()
                 budgetnList.addAll(recipes)

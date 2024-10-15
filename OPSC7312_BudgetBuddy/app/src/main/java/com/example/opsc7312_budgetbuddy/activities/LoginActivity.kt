@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt.AuthenticationCallback
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.app.ActivityCompat
@@ -122,15 +123,20 @@ class LoginActivity : AppCompatActivity() {
             }
     }
     private fun checkPermission(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_BIOMETRIC)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.USE_BIOMETRIC),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-        else{
-            biometrics()
+        val biometricManager = BiometricManager.from(this)
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                biometrics()
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                Toast.makeText(this, "No biometric features are available", Toast.LENGTH_SHORT).show()
+            }
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
+                Toast.makeText(this, "Biometric features are unavailable.", Toast.LENGTH_SHORT).show()
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                Toast.makeText(this, "Set up biometrics in device settings", Toast.LENGTH_SHORT).show()
+            }
         }
     }
     private fun biometrics(){
@@ -174,19 +180,5 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         biometricPrompt.authenticate(promptInfo)
-    }
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                biometrics()
-            } else {
-                Toast.makeText(this, "Biometric permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 }

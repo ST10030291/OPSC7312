@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.opsc7312_budgetbuddy"
-        minSdk = 29
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

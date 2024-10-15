@@ -175,4 +175,18 @@ class LoginActivity : AppCompatActivity() {
 
         biometricPrompt.authenticate(promptInfo)
     }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                biometrics()
+            } else {
+                Toast.makeText(this, "Biometric permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: androidx.biometric.BiometricPrompt
     private lateinit var promptInfo: PromptInfo
+    private var isLogged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,10 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             checkPermission()
-                            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, Dashboard::class.java)
-                            startActivity(intent)
-                            finish()
+
                         } else {
                             Toast.makeText(this, "Login Unsuccessful: ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }
@@ -105,10 +103,6 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     checkPermission()
-                    Toast.makeText(this, "Google Sign-In Successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, Dashboard::class.java)
-                    startActivity(intent)
-                    finish()
                 } else {
                     Toast.makeText(this, "Google Sign-In Failed: ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
@@ -156,6 +150,10 @@ class LoginActivity : AppCompatActivity() {
                         "Authentication succeeded!",
                         Toast.LENGTH_SHORT
                     ).show()
+                    Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@LoginActivity, Dashboard::class.java)
+                    startActivity(intent)
+                    finish()
                 }
 
                 override fun onAuthenticationFailed() {

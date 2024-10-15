@@ -186,56 +186,42 @@ class AccountFragment : Fragment() {
     }
 
 
-    private fun exportData(){
+    private fun exportData() {
         var isExported = false
-
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
-        } else {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, "Budget_Buddy_Report.csv")
-                put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-            }
-
-            val resolver = requireContext().contentResolver
-            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
-            uri?.let{
-                val outputStream = resolver.openOutputStream(it)
-                val fileWriter = OutputStreamWriter(outputStream)
-
-                for(budget in budgetnList){
-                    fileWriter.append(budget.categories.toString())
-                    fileWriter.append(budget.totalBudget.toString())
-                    isExported = true
-
-                }
-
-                for(transaction in transactionList){
-                    fileWriter.append(transaction.category)
-                    fileWriter.append(transaction.amount)
-                    isExported = true
-                }
-
-                fileWriter.flush()
-                fileWriter.close()
-            }
-
-            if(isExported){
-                for(budget in budgetnList){
-                    Toast.makeText(requireContext(), "CSV file saved successfully!" + budget.totalBudget.toString() , Toast.LENGTH_LONG).show()
-                }
-                //Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
-            }
-            else{
-                Toast.makeText(requireContext(), "CSV file was unsuccessful!", Toast.LENGTH_LONG).show()
-            }
-
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "Budget_Buddy_Report.csv")
+            put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
+        val resolver = requireContext().contentResolver
+        val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+        if (uri != null) {
+            resolver.openOutputStream(uri)?.use { outputStream ->
+                OutputStreamWriter(outputStream).use { fileWriter ->
 
+                    for (budget in budgetnList) {
+                        fileWriter.append("${budget.categories}, ${budget.totalBudget}\n")
+                        isExported = true
+                    }
+                    for (transaction in transactionList) {
+                        fileWriter.append("${transaction.category}, ${transaction.amount}\n")
+                        isExported = true
+                    }
+
+                    fileWriter.flush()
+                }
+            }
+
+            if (isExported) {
+                Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(requireContext(), "CSV export failed!", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "Failed to create file URI!", Toast.LENGTH_LONG).show()
+        }
     }
+
 
     //Sets up the database to reference the Profile images folder
     private fun databaseSetup()

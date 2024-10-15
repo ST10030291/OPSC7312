@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.USE_BIOMETRIC),
-                TransactionsFragment.PERMISSION_REQUEST_CODE
+                PERMISSION_REQUEST_CODE
             )
         }
         else{

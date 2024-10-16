@@ -108,6 +108,10 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
+
+    // This code was taken from Android Developers
+    // Posted by: Android Developers
+    // Available at: https://developer.android.com/identity/sign-in/biometric-auth
     private fun checkPermission(){
         val biometricManager = BiometricManager.from(this)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
@@ -115,13 +119,19 @@ class LoginActivity : AppCompatActivity() {
                 biometrics()
             }
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                Toast.makeText(this, "No biometric features are available", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@LoginActivity, Dashboard::class.java)
+                startActivity(intent)
+                finish()
             }
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                Toast.makeText(this, "Biometric features are unavailable.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@LoginActivity, Dashboard::class.java)
+                startActivity(intent)
+                finish()
             }
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                Toast.makeText(this, "Set up biometrics in device settings", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Set up biometrics in device settings to login", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -166,7 +176,7 @@ class LoginActivity : AppCompatActivity() {
         promptInfo = PromptInfo.Builder()
             .setTitle("Biometric Login")
             .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use Password/Pattern")
+            .setNegativeButtonText("Cancel")
             .build()
 
         biometricPrompt.authenticate(promptInfo)

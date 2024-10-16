@@ -33,6 +33,7 @@ import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
+import com.example.opsc7312_budgetbuddy.activities.models.Category
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
@@ -155,15 +156,25 @@ class AccountFragment : Fragment() {
 
     private fun importBudget(){
         val budgetCRUD = budgetCRUD()
-        budgetCRUD.getBudgets(
-            onSuccess = { recipes ->
-                budgetnList.clear()
-                budgetnList.addAll(recipes)
-            },
-            onError = {
-
-            }
-        )
+        budgetCRUD.getBudgets(onSuccess = { budgets ->
+            budgetnList.addAll(budgets.map { budget ->
+                BudgetModel(
+                    id = budget.id,
+                    userId = budget.userId,
+                    month = budget.month,
+                    totalBudget = budget.totalBudget,
+                    categories = budget.categories.map { category ->
+                        Category(
+                            categoryName = category.categoryName,
+                            amount = category.amount
+                        )
+                    }
+                )
+            })
+        },
+            onError = {errorMessage ->
+                Log.e("API Error", errorMessage)
+            })
     }
     private fun importTransactions(){
         val transactionCRUD = TransactionCRUD()
@@ -185,7 +196,17 @@ class AccountFragment : Fragment() {
         })
     }
 
+    // This code was taken from StakeOverflow
+    // Posted by: moon dev
+    // Available at: https://stackoverflow.com/questions/73446497/how-convert-data-to-csv-file-in-kotlin-android
 
+    // This code was taken from YouTube
+    // Posted by: Rafiqullah Taibzada
+    // Available at: https://www.youtube.com/watch?v=BlNHZ2bMwCQ&t=1s
+
+    // This code was taken from StackAbuse
+    // Posted by: Guest Contributor
+    // Available at: https://stackabuse.com/reading-and-writing-csv-files-in-kotlin-with-apache-commons/
     private fun exportData() {
         var isExported = false
         val contentValues = ContentValues().apply {
@@ -193,32 +214,48 @@ class AccountFragment : Fragment() {
             put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
             put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
         }
+        // This code was taken from OpenAI
+        // Posted by: OpenAI
+        // Available at: https://chat.openai.com/
         val resolver = requireContext().contentResolver
         val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
         if (uri != null) {
             resolver.openOutputStream(uri)?.use { outputStream ->
                 OutputStreamWriter(outputStream).use { fileWriter ->
-
+                    fileWriter.append("Budget Buddy Report:")
+                    fileWriter.append("\n")
+                    fileWriter.append("Budget:")
+                    fileWriter.append("\n")
                     for (budget in budgetnList) {
-                        fileWriter.append("${budget.categories}, ${budget.totalBudget}\n")
+                        fileWriter.append("Total Budget: ${budget.totalBudget}")
+                        fileWriter.append("\n")
+                        fileWriter.append("Month: ${budget.month}")
+                        fileWriter.append("\n")
+                        fileWriter.append("Expenses: ")
+                        fileWriter.append("\n")
+                        for(categories in budget.categories){
+                            fileWriter.append("\n")
+                            fileWriter.append("Category: ${categories.categoryName}, Amount: ${categories.amount}")
+                        }
                         isExported = true
                     }
+                    fileWriter.append("\n")
+                    fileWriter.append("Transactions:")
+                    fileWriter.append("\n")
                     for (transaction in transactionList) {
-                        fileWriter.append("${transaction.category}, ${transaction.amount}\n")
+                        fileWriter.append("Category: ${transaction.category}, Amount: ${transaction.amount}\n")
                         isExported = true
                     }
-
                     fileWriter.flush()
                 }
             }
-
             if (isExported) {
                 Toast.makeText(requireContext(), "CSV file saved successfully!", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(requireContext(), "CSV export failed!", Toast.LENGTH_LONG).show()
             }
         } else {
-            Toast.makeText(requireContext(), "Failed to create file URI!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Failed to create file!", Toast.LENGTH_LONG).show()
         }
     }
 

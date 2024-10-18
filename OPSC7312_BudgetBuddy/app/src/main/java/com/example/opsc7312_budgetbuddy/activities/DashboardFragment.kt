@@ -1,34 +1,23 @@
 package com.example.opsc7312_budgetbuddy.activities
 
-import android.Manifest
 import android.app.AlertDialog
+import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
-import android.os.CancellationSignal
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.biometric.BiometricPrompt.AuthenticationCallback
-import androidx.biometric.BiometricPrompt.PromptInfo
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.opsc7312_budgetbuddy.R
-import com.example.opsc7312_budgetbuddy.activities.TransactionsFragment.Companion
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
@@ -40,12 +29,11 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.Executor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class DashboardFragment : Fragment() {
 
@@ -295,6 +283,8 @@ class DashboardFragment : Fragment() {
             val val1 = totalBudget * 100
             val val2 = (availableBudget / totalBudget) * 100
 
+            triggerNotification(val2, totalBudget, availableBudget)
+
             // Update progress bars
             circularProgressBarSpent.setProgressWithAnimation(val1.toFloat(), 1000) // Spent amount
             circularProgressBarBudget.setProgressWithAnimation(val2.toFloat(), 1000) // Remaining amount
@@ -384,5 +374,62 @@ class DashboardFragment : Fragment() {
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
+    }
+
+    private fun createNotificationChannel(context: Context) {
+        val channelId = "budget_tracker_channel"
+        val channelName = "Budget Tracker Notifications"
+        val channelDescription = "Notifications for your budget tracker"
+
+        val channel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = channelDescription
+        }
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun showNotification(context: Context, title: String, message: String) {
+        val notificationId = 1
+        val channelId = "budget_tracker_channel"
+
+        val intent = Intent(context, requireActivity()::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("FRAGMENT_TO_LOAD", "NOTIFICATIONS")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.logo)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, notification)
+    }
+
+    private fun triggerNotification(val2 : Double, totalBudget : Double, availableBudget : Double){
+        createNotificationChannel(requireContext())
+        val amountRemaining = totalBudget - availableBudget
+
+        if(val2 == 90.0){
+            showNotification(requireContext(), "Budget Alert", "You have R$amountRemaining remaining of your set budget for the month!")
+        }
+        else if (val2 == 100.0){
+            showNotification(requireContext(), "Budget Alert", "You have reached your set budget for the month!")
+        }
+        else if (val2 > 100){
+            showNotification(requireContext(), "Budget Alert", "You have exceeded your budget for the month!")
+        }
     }
 }

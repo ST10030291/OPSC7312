@@ -6,13 +6,19 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +63,8 @@ class DashboardFragment : Fragment() {
 
     private lateinit var sqliteHelper: DatabaseHelper
 
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
+
     companion object {
         var PERMISSION_REQUEST_CODE = 100
     }
@@ -76,6 +84,8 @@ class DashboardFragment : Fragment() {
         val isOfflineMode = sharedPref.getBoolean("offlineMode", false)
         val userEmail = user?.email
         val userName = userEmail?.substringBefore("@") ?: "User"
+
+        obtainPermissions()
 
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
@@ -283,7 +293,7 @@ class DashboardFragment : Fragment() {
             val val1 = totalBudget * 100
             val val2 = (availableBudget / totalBudget) * 100
 
-            triggerNotification(val2, totalBudget, availableBudget)
+            checkNotificationsPermissionsBeforeTrigger(val2, totalBudget, availableBudget)
 
             // Update progress bars
             circularProgressBarSpent.setProgressWithAnimation(val1.toFloat(), 1000) // Spent amount
@@ -430,6 +440,24 @@ class DashboardFragment : Fragment() {
         }
         else if (val2 > 100){
             showNotification(requireContext(), "Budget Alert", "You have exceeded your budget for the month!")
+        }
+    }
+
+    private fun obtainPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private fun checkNotificationsPermissionsBeforeTrigger(val2: Double, totalBudget: Double, availableBudget: Double){
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                triggerNotification(val2, totalBudget, availableBudget)
+            } else {
+                obtainPermissions()
+            }
         }
     }
 }

@@ -51,34 +51,8 @@ class LogTransactionFragment: Fragment() {
             val calendar = Calendar.getInstance()
             val currentDate = dateFormat.format(calendar.time)
 
-            insertTransaction(name, amount, category, currentDate)
         }
         return view
-    }
-
-    fun insertTransaction(name: String, amount: Double, category: String, currentDate : String){
-        val database = dbHelper.writableDatabase
-        val calender = Calendar.getInstance()
-        val month = calender.get(Calendar.MONTH).toString()
-        val firebaseAuth = FirebaseAuth.getInstance().currentUser
-        val userID = firebaseAuth?.uid.toString()
-        val transaction = ContentValues().apply {
-            put(DatabaseHelper.TRANSACTION_NAME, name)
-            put(DatabaseHelper.TRANSACTION_AMOUNT, amount)
-            put(DatabaseHelper.TRANSACTION_CATEGORY, category)
-            put(DatabaseHelper.TRANSACTION_MONTH, month)
-            put(DatabaseHelper.TRANSACTION_DATE, currentDate)
-            put(DatabaseHelper.USER_ID, userID)
-        }
-
-        // Insert the data into the Users table
-        val newRowId = database.insert(DatabaseHelper.TRANSACTION_TABLE, null, transaction)
-        Toast.makeText(requireContext(), "TransactionModel added successfully", Toast.LENGTH_SHORT).show()
-        if (newRowId != -1L) {
-            Toast.makeText(requireContext(), "TransactionModel added successfully", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Error adding transaction", Toast.LENGTH_SHORT).show()
-        }
     }
 
 

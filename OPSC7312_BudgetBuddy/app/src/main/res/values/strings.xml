@@ -54,4 +54,6 @@
     <string name="dateHere" translatable="false">(DateHere)</string>
     <string name="save_pie_chart">Save Pie Chart</string>
     <string name="save_bar_graph">Save Bar graph</string>
+    <string name="network_error" translatable="false">Network Error</string>
+    <string name="some_features_will_not_be_available_in_offline_mode" translatable="false">Some features will not be available in offline mode.</string>
 </resources>

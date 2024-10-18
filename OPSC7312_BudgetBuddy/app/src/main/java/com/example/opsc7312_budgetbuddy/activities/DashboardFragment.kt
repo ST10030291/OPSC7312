@@ -1,6 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -21,6 +22,7 @@ import androidx.biometric.BiometricPrompt.AuthenticationCallback
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,23 +52,22 @@ class DashboardFragment : Fragment() {
     // Global variables
     private var circularTotalBudget: Double = 0.0
     private var circularAvailableBudget: Double = 0.0
+
     private lateinit var profileImageView: ShapeableImageView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var BudgetItems: MutableList<BudgetItem>
-    private lateinit var BudgetAdapter: BudgetAdapter
+    private lateinit var budgetItems: MutableList<BudgetItem>
+    private lateinit var budgetAdapter: BudgetAdapter
     private lateinit var totalBudgetTextView: TextView
     private lateinit var availableBudgetForMonth: TextView
+
     private lateinit var retrofit: Retrofit
     private lateinit var budgetApiService: BudgetApi
     private lateinit var transactionApiService: TransactionApi
+
     private lateinit var circularProgressBarBudget: CircularProgressBar
     private lateinit var circularProgressBarSpent: CircularProgressBar
 
-
-    private lateinit var executor: Executor
-    private lateinit var biometricPrompt: androidx.biometric.BiometricPrompt
-    private lateinit var promptInfo: PromptInfo
-    private lateinit var authenticationButton: Button
+    private lateinit var sqliteHelper: DatabaseHelper
 
     companion object {
         var PERMISSION_REQUEST_CODE = 100
@@ -81,12 +82,12 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val user = FirebaseAuth.getInstance().currentUser
-        val userId = user?.uid ?: return
-        profileImageView = view.findViewById(R.id.account_btn)
-        loadProfileImageFromFirebaseStorage()
-
-
+        val sharedPref = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val isOfflineMode = sharedPref.getBoolean("offlineMode", false)
+        val userEmail = user?.email
+        val userName = userEmail?.substringBefore("@") ?: "User"
 
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
@@ -94,95 +95,47 @@ class DashboardFragment : Fragment() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
-        // Initialize Circular Progress Bars
-        circularProgressBarBudget = view.findViewById(R.id.circularProgressBarBudget)
-        circularProgressBarSpent = view.findViewById(R.id.circularProgressBarSpent)
-
-        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
+        //Initialize elements
+        InitElements(view)
 
         budgetApiService = retrofit.create(BudgetApi::class.java)
         transactionApiService = retrofit.create(TransactionApi::class.java)
 
         // Display a welcome message with the users name for added personalization
-        val userEmail = user?.email
-        val userName = userEmail?.substringBefore("@") ?: "User"
         view.findViewById<TextView>(R.id.welcomeTextView).text = "Welcome, $userName"
 
-        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
 
-        BudgetItems = mutableListOf()
-        BudgetAdapter = BudgetAdapter(BudgetItems)
-        recyclerView.adapter = BudgetAdapter
+        budgetItems = mutableListOf()
+        budgetAdapter = BudgetAdapter(budgetItems)
+        recyclerView.adapter = budgetAdapter
 
-        // Display Total Budget set for the month
-        totalBudgetTextView = view.findViewById(R.id.availableBudget)
-        availableBudgetForMonth = view.findViewById(R.id.availableBudgetForMonth)
+        if(isOfflineMode){
+            handleOfflineMode(requireContext())
+        }else{
+            fetchTotalBudget()
+            fetchTransactionCount()
+            fetchRemainingBudget()
+            fetchBudgets()
+            updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
+            loadProfileImageFromFirebaseStorage()
+        }
 
-        // Update Total Available Budget and Amount of Transactions
-        fetchTotalBudget()
-        fetchTransactionCount()
-        fetchRemainingBudget()
-        fetchBudgets()
-        updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
-        //biometrics()
 
     }
-    /*private fun biometrics(){
-        executor = ContextCompat.getMainExecutor(requireContext())
-        biometricPrompt = androidx.biometric.BiometricPrompt(requireActivity(), executor,
-            object : AuthenticationCallback() {
-                override fun onAuthenticationError(
-                    errorCode: Int,
-                    errString: CharSequence
-                ) {
-                    super.onAuthenticationError(errorCode, errString)
-                    Toast.makeText(
-                        requireContext(),
-                        "Authentication error: $errString",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
 
-                override fun onAuthenticationSucceeded(
-                    result: androidx.biometric.BiometricPrompt.AuthenticationResult
-                ) {
-                    super.onAuthenticationSucceeded(result)
-                    Toast.makeText(
-                        requireContext(),
-                        "Authentication succeeded!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+    private fun InitElements(view: View){
+        sqliteHelper = DatabaseHelper(requireContext())
 
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                    Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-
-        promptInfo = PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Use account password")
-            .build()
-
-        authenticationButton.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.USE_BIOMETRIC)
-                != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(),
-                    arrayOf(Manifest.permission.USE_BIOMETRIC),
-                    TransactionsFragment.PERMISSION_REQUEST_CODE
-                )
-            }
-            else{
-                biometricPrompt.authenticate(promptInfo)
-            }
-        }
-    }*/
+        circularProgressBarBudget = view.findViewById(R.id.circularProgressBarBudget)
+        circularProgressBarSpent = view.findViewById(R.id.circularProgressBarSpent)
+        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
+        profileImageView = view.findViewById(R.id.account_btn)
+        recyclerView = view.findViewById(R.id.budgetBreakdownRecyclerView)
+        totalBudgetTextView = view.findViewById(R.id.availableBudget)
+        availableBudgetForMonth = view.findViewById(R.id.availableBudgetForMonth)
+    }
 
     // Method to fetch Category Name and Amount from the API for Budget Breakdown
     private fun fetchBudgets() {
@@ -216,7 +169,6 @@ class DashboardFragment : Fragment() {
         })
     }
 
-
     // Method to fetch the total available budget for the month from the API
     private fun fetchTotalBudget() {
 
@@ -231,6 +183,8 @@ class DashboardFragment : Fragment() {
                 if (response.isSuccessful) {
                     val budgets = response.body() ?: emptyList()
                     if (budgets.isNotEmpty()) {
+                        sqliteHelper.saveBudgetsToLocalDatabase(budgets)
+
                         val latestBudget = budgets.maxByOrNull { it.month }
                         val totalBudget = latestBudget?.totalBudget ?: 0.0
                         circularTotalBudget = totalBudget
@@ -262,7 +216,9 @@ class DashboardFragment : Fragment() {
                 if (response.isSuccessful) {
                     val transactions = response.body() ?: emptyList()
                     val transactionCount = transactions.size
-                    // Update the UI with the transaction count
+
+                    sqliteHelper.saveTransactionsToLocalDatabase(transactions)
+
                     view?.findViewById<TextView>(R.id.totalTransactions)?.text = "$transactionCount"
                 } else {
                     Log.e("API Error", "Error fetching transactions")
@@ -358,8 +314,75 @@ class DashboardFragment : Fragment() {
                 .load(uri)
                 .placeholder(R.drawable.baseline_account_circle_24)
                 .into(profileImageView)
+
+            sqliteHelper.saveProfilePicture(1, uri.toString())
         }.addOnFailureListener {
             Log.e("Firebase Storage", "Error loading image", it)
         }
+    }
+
+    //This will call all the offline methods specific to the local db
+    private fun handleOfflineMode(currentContext: Context) {
+        val storedUserId = sqliteHelper.getStoredUserId(currentContext)
+
+        if (storedUserId == null) {
+            showLoginReminder(currentContext)
+        } else {
+            //Gets all necessary data from the local db
+            val categories = sqliteHelper.getCategoriesForBudget(storedUserId)
+            val transactionCount = sqliteHelper.getTransactionCount(storedUserId)
+            val totalBudget = sqliteHelper.getTotalBudgetForLatestMonth(storedUserId)
+            val totalSpent = sqliteHelper.getTotalSpentFromLocalDatabase()
+            val uri = sqliteHelper.getProfilePicture()
+
+            //Displays the total budget
+            if (totalBudget != 0.0) {
+                circularTotalBudget = totalBudget
+                totalBudgetTextView.text = "${totalBudget}"
+            } else {
+                totalBudgetTextView.text = "R0.00"
+            }
+
+            //Displays the Transaction count
+            view?.findViewById<TextView>(R.id.totalTransactions)?.text = "$transactionCount"
+
+            //Displays the budget items
+            val budgetItems = mutableListOf<BudgetItem>()
+
+            for (category in categories) {
+                budgetItems.add(
+                    BudgetItem(
+                        categoryName = category.categoryName,
+                        amount = category.amount
+                    )
+                )
+            }
+
+            if (budgetItems.isNotEmpty()) {
+                val adapter = BudgetAdapter(budgetItems)
+                recyclerView.adapter = adapter
+            }
+
+            //Displays the remaining budget and updates the progress bar
+            val remainingBudget = totalBudget - totalSpent
+            circularAvailableBudget = remainingBudget
+            availableBudgetForMonth.text = "R$remainingBudget"
+            updateCircularProgressBars(circularTotalBudget, circularAvailableBudget)
+
+            //Displays the users profile picture
+            Glide.with(this)
+                .load(uri)
+                .placeholder(R.drawable.baseline_account_circle_24)
+                .into(profileImageView)
+        }
+    }
+
+    private fun showLoginReminder(currentContext: Context) {
+        AlertDialog.Builder(currentContext)
+            .setTitle("Login Required")
+            .setMessage("You need to log in at least once while online to use offline features.")
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 }

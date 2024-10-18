@@ -54,6 +54,7 @@ class TransactionsFragment : Fragment() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: PromptInfo
     private lateinit var authenticationButton: Button
+    private lateinit var sqliteHelper: DatabaseHelper
 
     companion object {
         var PERMISSION_REQUEST_CODE = 100
@@ -61,18 +62,27 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val isOfflineMode = sharedPref.getBoolean("offlineMode", false)
+
+        sqliteHelper = DatabaseHelper(requireContext())
         profileImageView = view.findViewById(R.id.transactions_account_btn)
         recyclerView = view.findViewById(R.id.recentTransactionsRecyclerView)
         authenticationButton = view.findViewById(R.id.authenticateButton)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.setHasFixedSize(true)
 
-
         TransactionItems = mutableListOf()
         TransactionAdapter = TransactionAdapter(TransactionItems)
         recyclerView.adapter = TransactionAdapter
         loadProfileImageFromFirebaseStorage()
-        fetchTransactions()
+
+        if(isOfflineMode){
+            handleOfflineMode()
+        }else {
+            fetchTransactions()
+        }
 
         executor = ContextCompat.getMainExecutor(requireContext())
         biometricPrompt = BiometricPrompt(requireActivity(), executor,
@@ -117,9 +127,27 @@ class TransactionsFragment : Fragment() {
             }
         }
 
-
     }
 
+    private fun handleOfflineMode() {
+        val transactions = sqliteHelper.getLocalTransactions()
+        val transactionItems = mutableListOf<TransactionItem>()
+
+        for (transactionModel in transactions) {
+            transactionItems.add(
+                TransactionItem(
+                    name = transactionModel.transactionName,
+                    category = transactionModel.categoryName,
+                    amount = transactionModel.transactionAmount.toString(),
+                    date = transactionModel.transactionDate
+                )
+            )
+        }
+        if (transactionItems.isNotEmpty()) {
+            val adapter = TransactionAdapter(transactionItems)
+            recyclerView.adapter = adapter
+        }
+    }
 
     private fun fetchTransactions() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return

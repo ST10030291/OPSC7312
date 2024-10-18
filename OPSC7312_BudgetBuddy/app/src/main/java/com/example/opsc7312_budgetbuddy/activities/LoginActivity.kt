@@ -1,6 +1,7 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -70,6 +71,10 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             checkPermission()
+                            val user = FirebaseAuth.getInstance().currentUser
+                            user?.let {
+                                storeUserIdLocally(it.uid)
+                            }
 
                         } else {
                             Toast.makeText(this, "Login Unsuccessful: ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -113,6 +118,10 @@ class LoginActivity : AppCompatActivity() {
     // Posted by: Android Developers
     // Available at: https://developer.android.com/identity/sign-in/biometric-auth
     private fun checkPermission(){
+        val sharedPref = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putBoolean("offlineMode", false)
+        editor.apply()
         val biometricManager = BiometricManager.from(this)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
@@ -135,6 +144,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun storeUserIdLocally(userId: String) {
+        val sharedPref = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("userId", userId)
+        editor.apply()
+    }
+
     private fun biometrics(){
         executor = ContextCompat.getMainExecutor(this@LoginActivity)
         biometricPrompt = androidx.biometric.BiometricPrompt(this@LoginActivity, executor,

@@ -41,10 +41,10 @@ class MainActivity : AppCompatActivity() {
 
                 if(counter == 100){
                     t.cancel()
-
                     //Redirects to the Login Activity after progress counter reaches 100
                     val intent = Intent(this@MainActivity, LoginActivity::class.java)
                     startActivity(intent)
+
                 }
             }
         }

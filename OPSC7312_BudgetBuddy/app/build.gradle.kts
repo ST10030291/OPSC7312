@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.mpandroidchart)
 
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

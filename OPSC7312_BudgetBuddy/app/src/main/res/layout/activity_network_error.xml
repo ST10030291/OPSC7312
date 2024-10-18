@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.NetworkErrorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/networkErrorGif"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/todo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/transparent"
+            android:src="@drawable/no_network" />
+
+        <TextView
+            android:id="@+id/networkErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/network_error"
+            android:textSize="15sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/networkErrorGif"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/networkErrorMessage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/some_features_will_not_be_available_in_offline_mode"
+            android:textSize="15sp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/networkErrorGif"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/switchToOfflineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Switch to Offline Mode"
+            android:textAllCaps="false"
+            android:layout_marginTop="24dp"
+            android:padding="14dp"
+            android:textSize="15sp"
+            android:background="@drawable/network_btn_border"
+            app:layout_constraintTop_toBottomOf="@id/networkErrorMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

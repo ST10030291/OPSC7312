@@ -1,10 +1,15 @@
 package com.example.opsc7312_budgetbuddy.activities
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -17,9 +22,14 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
@@ -36,29 +46,57 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class Dashboard : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var transactionCRUD: TransactionCRUD
     private lateinit var budgetCRUD: budgetCRUD
+
     private var budgetList: MutableList<BudgetModel> = mutableListOf()
     private var expenseList: MutableList<Category> = mutableListOf()
-    private lateinit var recyclerView: RecyclerView
+
     private lateinit var addExpenseAdapter: AddExpenseAdapter
 
+    private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
+    private lateinit var sqliteHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sqliteHelper = DatabaseHelper(this)
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        //This checks if the user is offline or online
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            //If the user is online, it will sync firebase to the local db
+            override fun onAvailable(network: Network) {
+                syncOfflineData()
+
+                val sharedPref = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putBoolean("offlineMode", false)
+                editor.apply()
+            }
+            //If the user is offline, the user will be directed to NetworkError Activity
+            override fun onLost(network: Network) {
+                val intent = Intent(this@Dashboard, NetworkErrorActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        registerNetworkCallback()
+
         transactionCRUD = TransactionCRUD()
         budgetCRUD = budgetCRUD()
-        loadBudgets()
 
-        // Set default fragment
+        loadBudgets()
         loadFragment(DashboardFragment())
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
@@ -92,6 +130,25 @@ class Dashboard : AppCompatActivity() {
         }
     }
 
+    //Registers the network callback for wifi and cellular network
+    private fun registerNetworkCallback() {
+        val networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
+    }
+
+    private fun syncOfflineData() {
+        sqliteHelper.syncOfflineTransactions()
+    }
+
     private fun showPopupMenu() {
         val popup = Dialog(this)
         popup.setContentView(R.layout.custom_popup_layout)
@@ -121,7 +178,6 @@ class Dashboard : AppCompatActivity() {
             popup.dismiss()
         }
     }
-
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
@@ -225,6 +281,9 @@ class Dashboard : AppCompatActivity() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.fragment_log_transaction)
 
+        val sharedPref = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+        val isOfflineMode = sharedPref.getBoolean("offlineMode", false)
+
         val transactionName = dialog.findViewById<EditText>(R.id.transactionNameInput)
         val transactionAmount = dialog.findViewById<EditText>(R.id.amountInput)
         val categorySpinner = dialog.findViewById<Spinner>(R.id.categoryInput)
@@ -249,7 +308,12 @@ class Dashboard : AppCompatActivity() {
             }else{
                 val transactionModel = TransactionModel(userId,name, amount, category, currentDate)
 
-                transactionCRUD.saveTransaction(transactionModel)
+                if(isOfflineMode){
+                    sqliteHelper.addTransaction(transactionModel)
+                }
+                else{
+                    transactionCRUD.saveTransaction(transactionModel)
+                }
 
                 // Reload the page for transaction count to reflect the new transaction
                 val intent = Intent(this, javaClass)

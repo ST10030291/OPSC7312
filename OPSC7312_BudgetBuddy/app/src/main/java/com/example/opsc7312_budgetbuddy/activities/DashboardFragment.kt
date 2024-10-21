@@ -8,8 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.Manifest
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
@@ -450,12 +449,23 @@ class DashboardFragment : Fragment() {
     }
 
     private fun checkNotificationsPermissionsBeforeTrigger(val2: Double, totalBudget: Double, availableBudget: Double) {
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                triggerNotification(val2, totalBudget, availableBudget)
+        try {
+            permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+                if (isGranted) {
+                    triggerNotification(val2, totalBudget, availableBudget)
+                }
             }
+            // Check and possibly request permissions
+            obtainPermissions()
+        } catch (e: SecurityException) {
+            Log.e("NotificationPermission", "Security error checking permissions: ${e.message}")
+            Toast.makeText(requireContext(), "Permission error: ${e.message}", Toast.LENGTH_LONG).show()
+        } catch (e: IllegalStateException) {
+            Log.e("NotificationPermission", "Illegal state error: ${e.message}")
+            Toast.makeText(requireContext(), "Unexpected state: ${e.message}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Log.e("NotificationPermission", "Unexpected error: ${e.message}")
+            Toast.makeText(requireContext(), "An unexpected error occurred.", Toast.LENGTH_LONG).show()
         }
-        // Check and possibly request permissions
-        obtainPermissions()
     }
 }

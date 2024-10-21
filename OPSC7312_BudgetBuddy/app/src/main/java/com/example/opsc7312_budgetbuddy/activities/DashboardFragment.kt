@@ -85,8 +85,6 @@ class DashboardFragment : Fragment() {
         val userEmail = user?.email
         val userName = userEmail?.substringBefore("@") ?: "User"
 
-        obtainPermissions()
-
         // Initialize Retrofit
         retrofit = Retrofit.Builder()
             .baseUrl("https://budgetapp-amber.vercel.app/api/")
@@ -119,8 +117,6 @@ class DashboardFragment : Fragment() {
             updateCircularProgressBars(circularTotalBudget,circularAvailableBudget)
             loadProfileImageFromFirebaseStorage()
         }
-
-
     }
 
     private fun InitElements(view: View){
@@ -451,13 +447,13 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun checkNotificationsPermissionsBeforeTrigger(val2: Double, totalBudget: Double, availableBudget: Double){
+    private fun checkNotificationsPermissionsBeforeTrigger(val2: Double, totalBudget: Double, availableBudget: Double) {
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 triggerNotification(val2, totalBudget, availableBudget)
-            } else {
-                obtainPermissions()
             }
         }
+        // Check and possibly request permissions
+        obtainPermissions()
     }
 }

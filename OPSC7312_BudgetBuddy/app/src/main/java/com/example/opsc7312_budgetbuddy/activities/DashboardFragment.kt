@@ -108,6 +108,16 @@ class DashboardFragment : Fragment() {
         budgetAdapter = BudgetAdapter(budgetItems)
         recyclerView.adapter = budgetAdapter
 
+        // Initialize the permission launcher
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission granted, trigger the notification in updateBudget
+                triggerNotification((circularAvailableBudget / circularTotalBudget) * 100, circularTotalBudget, circularAvailableBudget)
+            } else {
+                Toast.makeText(requireContext(), "Notification permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         if(isOfflineMode){
             handleOfflineMode(requireContext())
         }else{
@@ -290,7 +300,8 @@ class DashboardFragment : Fragment() {
             val val1 = totalBudget * 100
             val val2 = (availableBudget / totalBudget) * 100
 
-            checkNotificationsPermissionsBeforeTrigger(val2, totalBudget, availableBudget)
+            // Check permissions before triggering notification
+            checkNotificationsPermissionsBeforeTrigger()
 
             // Update progress bars
             circularProgressBarSpent.setProgressWithAnimation(val1.toFloat(), 1000) // Spent amount
@@ -383,89 +394,86 @@ class DashboardFragment : Fragment() {
             .show()
     }
 
-    private fun createNotificationChannel(context: Context) {
-        val channelId = "budget_tracker_channel"
-        val channelName = "Budget Tracker Notifications"
-        val channelDescription = "Notifications for your budget tracker"
+    private fun createNotificationChannel() {
+        try {
+            val channelId = "budget_tracker_channel"
+            val channelName = "Budget Tracker Notifications"
+            val channelDescription = "Notifications for your budget tracker"
 
-        val channel = NotificationChannel(
-            channelId,
-            channelName,
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = channelDescription
+            val channel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = channelDescription
+            }
+
+            val notificationManager = requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        } catch (e: Exception) {
+            Log.e("NotificationChannel", "Error creating notification channel: ${e.message}")
         }
-
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
     }
 
-    private fun showNotification(context: Context, title: String, message: String) {
-        val notificationId = 1
-        val channelId = "budget_tracker_channel"
+    private fun showNotification(title: String, message: String) {
+        try {
+            val notificationId = 1
+            val channelId = "budget_tracker_channel"
 
-        val intent = Intent(context, requireActivity()::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("FRAGMENT_TO_LOAD", "NOTIFICATIONS")
+            val intent = Intent(requireContext(), DashboardFragment::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("FRAGMENT_TO_LOAD", "NOTIFICATIONS")
+            }
+
+            val pendingIntent = PendingIntent.getActivity(
+                requireContext(), 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            val notification = NotificationCompat.Builder(requireContext(), channelId)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
+
+            val notificationManager = requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(notificationId, notification)
+        } catch (e: Exception) {
+            Log.e("ShowNotification", "Error showing notification: ${e.message}")
         }
-
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-
-        val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.logo)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .build()
-
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, notification)
     }
 
-    private fun triggerNotification(val2 : Double, totalBudget : Double, availableBudget : Double){
-        createNotificationChannel(requireContext())
+    private fun triggerNotification(val2: Double, totalBudget: Double, availableBudget: Double) {
+        createNotificationChannel()
         val amountRemaining = totalBudget - availableBudget
 
-        if(val2 == 90.0){
-            showNotification(requireContext(), "Budget Alert", "You have R$amountRemaining remaining of your set budget for the month!")
-        }
-        else if (val2 == 100.0){
-            showNotification(requireContext(), "Budget Alert", "You have reached your set budget for the month!")
-        }
-        else if (val2 > 100){
-            showNotification(requireContext(), "Budget Alert", "You have exceeded your budget for the month!")
+        when {
+            val2 == 90.0 -> showNotification("Budget Alert", "You have R$$amountRemaining remaining of your set budget for the month!")
+            val2 == 100.0 -> showNotification("Budget Alert", "You have reached your set budget for the month!")
+            val2 > 100 -> showNotification("Budget Alert", "You have exceeded your budget for the month!")
         }
     }
 
-    private fun obtainPermissions() {
+    private fun obtainPermissions(onPermissionGranted: () -> Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                // Call the provided callback if permission is already granted
+                onPermissionGranted()
             }
+        } else {
+            // If below API level Tiramisu, no need to request permission
+            onPermissionGranted()
         }
     }
 
-    private fun checkNotificationsPermissionsBeforeTrigger(val2: Double, totalBudget: Double, availableBudget: Double) {
-        try {
-            permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                if (isGranted) {
-                    triggerNotification(val2, totalBudget, availableBudget)
-                }
-            }
-            // Check and possibly request permissions
-            obtainPermissions()
-        } catch (e: SecurityException) {
-            Log.e("NotificationPermission", "Security error checking permissions: ${e.message}")
-            Toast.makeText(requireContext(), "Permission error: ${e.message}", Toast.LENGTH_LONG).show()
-        } catch (e: IllegalStateException) {
-            Log.e("NotificationPermission", "Illegal state error: ${e.message}")
-            Toast.makeText(requireContext(), "Unexpected state: ${e.message}", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Log.e("NotificationPermission", "Unexpected error: ${e.message}")
-            Toast.makeText(requireContext(), "An unexpected error occurred.", Toast.LENGTH_LONG).show()
+    private fun checkNotificationsPermissionsBeforeTrigger() {
+        obtainPermissions {
+            triggerNotification((circularAvailableBudget / circularTotalBudget) * 100, circularTotalBudget, circularAvailableBudget)
         }
     }
 }

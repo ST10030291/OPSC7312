@@ -67,8 +67,8 @@ banking app.
 ## Feature 3 - Widget
 A widget identical to the floating island on the dashboard is displayed as a widget on the users home screen,
 so that they are able to quickly view Availble budget and budget for the month as wel ass amount of transactions for the month.
-## Feature 4 - Language Accessibility
-The app is currently translatable to one alternative South African language which is Afrikaans making the app more accessible.
+## Feature 4 - Export Data to CSV
+The app has an export feature in the account settings where you can export all your data to a csv file and you can keep it for planning reasons or accounting reasons.
 ## Feature 5 - Profile Pic
 To ensure customization and personalization of users and the app, users are able to add their own profile picture.
 ## Feature 6 - Save Graph & Chart 

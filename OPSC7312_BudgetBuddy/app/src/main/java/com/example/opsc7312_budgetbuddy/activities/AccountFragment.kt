@@ -1,14 +1,11 @@
 package com.example.opsc7312_budgetbuddy.activities
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,8 +18,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -30,13 +25,10 @@ import com.example.opsc7312_budgetbuddy.R
 import com.example.opsc7312_budgetbuddy.activities.adapters.BudgetHistoryAdapter
 import com.example.opsc7312_budgetbuddy.activities.interfaces.BudgetApi
 import com.example.opsc7312_budgetbuddy.activities.interfaces.TransactionApi
-import com.example.opsc7312_budgetbuddy.activities.models.BudgetAdapter
-import com.example.opsc7312_budgetbuddy.activities.models.BudgetItem
 import com.example.opsc7312_budgetbuddy.activities.models.BudgetModel
 import com.example.opsc7312_budgetbuddy.activities.models.Category
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionCRUD
 import com.example.opsc7312_budgetbuddy.activities.models.TransactionItem
-import com.example.opsc7312_budgetbuddy.activities.models.TransactionModel
 import com.example.opsc7312_budgetbuddy.activities.models.budgetCRUD
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,11 +42,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
-import java.io.FileWriter
 import java.io.OutputStreamWriter
 import java.util.Locale
-import kotlin.properties.Delegates
 
 class AccountFragment : Fragment() {
 
@@ -116,14 +105,6 @@ class AccountFragment : Fragment() {
         // Load saved language preference
         languageSwitch.isChecked = savedLanguage == "af"
 
-        // notification button click listener
-        view.findViewById<ImageView>(R.id.notification_btn)?.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, NotificationsFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-
         // language switch
         languageSwitch.setOnCheckedChangeListener { _, isChecked ->
             val languageCode = if (isChecked) "af" else "en"
@@ -135,8 +116,6 @@ class AccountFragment : Fragment() {
         changeProfilePicBtn.setOnClickListener{
             selectImageLauncher.launch("image/*")
         }
-
-
 
         budgetAdapter = BudgetHistoryAdapter(budgetList, requireContext())
         val budgetRecycler = view.findViewById<RecyclerView>(R.id.BudgetHistoryListView)

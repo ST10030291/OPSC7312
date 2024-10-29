@@ -70,14 +70,5 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:scrollbars="vertical" />
-        <Button
-            android:id="@+id/authenticateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/recentTransactionsRecyclerView"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            android:text="Authenticate"
-            android:textColor="@color/white"/>
     </RelativeLayout>
 </FrameLayout>

@@ -394,6 +394,10 @@ class DashboardFragment : Fragment() {
             .show()
     }
 
+    // Blog post
+    // Title: Create and manage notification channels
+    // Posted by: Google for Developers
+    // Available at: https://developer.android.com/develop/ui/views/notifications/channels#:~:text=To%20create%20a%20notification%20channel%2C%20follow%20these%20steps%3A,the%20notification%20channel%20by%20passing%20it%20to%20createNotificationChannel%28%29.
     private fun createNotificationChannel() {
         try {
             val channelId = "budget_tracker_channel"
@@ -415,6 +419,10 @@ class DashboardFragment : Fragment() {
         }
     }
 
+    // Blog post
+    // Title: Create and manage notification channels
+    // Posted by: Google for Developers
+    // Available at: https://developer.android.com/develop/ui/views/notifications/channels#:~:text=To%20create%20a%20notification%20channel%2C%20follow%20these%20steps%3A,the%20notification%20channel%20by%20passing%20it%20to%20createNotificationChannel%28%29.
     private fun showNotification(title: String, message: String) {
         try {
             val notificationId = 1
@@ -450,6 +458,10 @@ class DashboardFragment : Fragment() {
         createNotificationChannel()
         val amountRemaining = totalBudget - availableBudget
 
+        // Blog post
+        // Title: Kotlin when expression
+        // Posted by: Praveenruhil
+        // Available at: https://www.geeksforgeeks.org/kotlin-when-expression/
         when {
             val2 == 90.0 -> showNotification("Budget Alert", "You have R$$amountRemaining remaining of your set budget for the month!")
             val2 == 100.0 -> showNotification("Budget Alert", "You have reached your set budget for the month!")
@@ -457,6 +469,10 @@ class DashboardFragment : Fragment() {
         }
     }
 
+    // Blog post
+    // Title: Create and manage notification channels
+    // Posted by: Google for Developers
+    // Available at: https://developer.android.com/develop/ui/views/notifications/channels#:~:text=To%20create%20a%20notification%20channel%2C%20follow%20these%20steps%3A,the%20notification%20channel%20by%20passing%20it%20to%20createNotificationChannel%28%29.
     private fun obtainPermissions(onPermissionGranted: () -> Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

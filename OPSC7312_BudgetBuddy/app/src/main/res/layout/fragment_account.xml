@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="30dp"
         android:id="@+id/layout1">
 
@@ -155,25 +155,33 @@
                 android:contentDescription="@string/todo"
                 android:src="@drawable/line_seperator"/>
 
+            <Button
+                android:id="@+id/exportBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue"
+                android:layout_marginTop="10dp"
+                android:text="Export Budget to CSV"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
                 <!-- Budget History -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
                     android:text="@string/budget_history"
                     android:textColor="@color/black"
                     android:fontFamily="@font/mplus_rounded"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginBottom="20dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/BudgetHistoryListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
-
 
         </LinearLayout>
 
@@ -229,17 +237,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Button
-            android:id="@+id/exportBtn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:backgroundTint="@color/blue"
-            android:text="Export to CSV"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+
 
     </RelativeLayout>
-</FrameLayout>
+</ScrollView>

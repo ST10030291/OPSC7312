@@ -69,10 +69,11 @@ A widget identical to the floating island on the dashboard is displayed as a wid
 so that they are able to quickly view Availble budget and budget for the month as wel ass amount of transactions for the month.
 ## Feature 4 - Export Data to CSV
 The app has an export feature in the account settings where you can export all your data to a csv file and you can keep it for planning reasons or accounting reasons.
-## Feature 5 - Profile Pic
-To ensure customization and personalization of users and the app, users are able to add their own profile picture.
-## Feature 6 - Save Graph & Chart 
+## Feature 5 - Save Graph & Chart 
 Users can save their graphs and charts to their devices storage via one of two buttons on the statistics page.
+## Feature 6 - Profile Pic
+To ensure customization and personalization of users and the app, users are able to add their own profile picture.
+
 
 ## Comprehensive report detailing the purpose of the app, its design considerations and the utilisation of GitHub and GitHub Actions
 As a team, we used GitHub to collaborate effectively on developing our application. We created a shared repository to host the project's source code, allowing each member to clone, modify, and contribute to the project. Through branching, team members could work on different features or bug fixes simultaneously without interfering with each other's progress. By using GitHub Actions, we automated tests and deployment processes, making the development cycle more efficient. This collaborative approach helped us maintain version control, improve team coordination, and deliver a well-organized, high-quality application.

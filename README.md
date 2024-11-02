@@ -52,12 +52,19 @@ of these budgets. In regard to the settings you can change your profile picture 
 setting of your application and swap between english and afrikaans.
 
 # Features:
-## Required Feature 1 - (single sign-on (SSO))
+## Required Feature - (single sign-on (SSO))
 The user must be able to register and log in to the app using single sign-on (SSO). Implemented with Google.
-## Required Feature 1 - (Settings)
+## Required Feature - (Settings)
 The user must be able to change their settings in the app. The user is able to change various setting in the account settings such as the language from English to Afrikaans.
-## Required Feature 1 - (REST API)
+## Required Feature - (REST API)
 Connect to a REST API you created that is connected to your database. 
+## Required Feature - Biometrics
+The biometrics is enabled for when the user wants to login via Signing in with Google or with their credentials.
+## Required Feature - Multi-Language 
+The app supports multi-languages as this app aims to meet the needs of more users.
+## Required Feature - Offline Mode
+
+## Required Feature - Real-time Notifications
 
 ## Feature 1 - Set a Budget
 Via the pop-up botton and menu a user is able to set a budget for the current month by inputting the total budget and entering categories and their allocated funds.

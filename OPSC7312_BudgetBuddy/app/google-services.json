@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:548207325701:android:414cbc5e662ab479cb226c",
+        "android_client_info": {
+          "package_name": "com.codebenders.opsc7312_budgetbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548207325701-0hf997pjer1mo1ge059jg2b2v0qn1g2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codebenders.opsc7312_budgetbuddy",
+            "certificate_hash": "8349148a86eda24f83683c36a440aa316fbd44b7"
+          }
+        },
+        {
+          "client_id": "548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_EjMGvzFezFw19m9ReE7ljb0cFzH81F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:548207325701:android:225c8ca425d6ec35cb226c",
         "android_client_info": {
           "package_name": "com.example.opsc7312_budgetbuddy"
@@ -19,6 +56,14 @@
           "android_info": {
             "package_name": "com.example.opsc7312_budgetbuddy",
             "certificate_hash": "8349148a86eda24f83683c36a440aa316fbd44b7"
+          }
+        },
+        {
+          "client_id": "548207325701-f2koln2hqqcevqsspabjmjnapb8o7th9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.opsc7312_budgetbuddy",
+            "certificate_hash": "0ac90d699be37b43ba6b5a453d26eac3eb364039"
           }
         },
         {

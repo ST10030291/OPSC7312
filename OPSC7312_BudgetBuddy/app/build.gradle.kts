@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.opsc7312_budgetbuddy"
+    namespace = "com.codebenders.opsc7312_budgetbuddy"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.opsc7312_budgetbuddy"
+        applicationId = "com.codebenders.opsc7312_budgetbuddy"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

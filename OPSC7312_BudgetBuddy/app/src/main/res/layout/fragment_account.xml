@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/blue"
                 android:layout_marginTop="10dp"
-                android:text="Export Budget to CSV"
+                android:text="@string/export_budget_to_csv"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 

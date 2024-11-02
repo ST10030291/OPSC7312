@@ -10,6 +10,7 @@
     <string name="have_an_account">Het \'n rekening</string>
     <string name="home_page">Tuis Blad</string>
     <string name="account">Rekening</string>
+    <string name="analytics">Analise</string>
     <string name="welcome">Welkom</string>
     <string name="available_budget">Beskikbare begroting</string>
     <string name="budget_zar">Begroting (ZAR)</string>
@@ -22,6 +23,8 @@
     <string name="total_budgets_made">Totale begrotings gemaak:</string>
     <string name="change_language_to_afrikaans">Change Language to English</string>
     <string name="budget_history">Begroting Geskiedenis</string>
+    <string name="total_budgeted_with_budget_buddy">Totaal begroot met Budget Buddy</string>
+    <string name="export_budget_to_csv">Voer begroting uit na CSV</string>
 
 
     <string name="budget_for_the_month">Begroot vir die maand</string>
@@ -34,4 +37,5 @@
 
     <string name="save_pie_chart">Stoor sirkeldiagram</string>
     <string name="save_bar_graph">Stoor staafgrafiek</string>
+
 </resources>

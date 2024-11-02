@@ -10,7 +10,7 @@
     <string name="home_page">Home Page</string>
     <string name="budget_buddy" translatable="false">Budget Buddy</string>
     <string name="dashboard" translatable="false">Dashboard</string>
-    <string name="analytics" translatable="false">Analytics</string>
+    <string name="analytics">Analytics</string>
     <string name="account">Account</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
@@ -28,7 +28,7 @@
     <string name="default_web_client_id" translatable="false">548207325701-qfsj50e6pci9a8mqqf78om4o6ml2nh97.apps.googleusercontent.com</string>
     <string name="notifications">Notifications</string>
     <string name="total_budgets_made">Total Budgets made:</string>
-    <string name="total_budgeted_with_budget_buddy" translatable="false">Total budgeted with Budget Buddy:</string>
+    <string name="total_budgeted_with_budget_buddy">Total budgeted with Budget Buddy:</string>
     <string name="change_language_to_afrikaans">Verander Taal na Afrikaans</string>
     <string name="budget_history">Budget History</string>
     <string name="kaushildajee_gmail_com" translatable="false">Kaushildajee@gmail.com</string>
@@ -56,4 +56,5 @@
     <string name="save_bar_graph">Save Bar graph</string>
     <string name="network_error" translatable="false">Network Error</string>
     <string name="some_features_will_not_be_available_in_offline_mode" translatable="false">Some features will not be available in offline mode.</string>
+    <string name="export_budget_to_csv">Export Budget to CSV</string>
 </resources>
